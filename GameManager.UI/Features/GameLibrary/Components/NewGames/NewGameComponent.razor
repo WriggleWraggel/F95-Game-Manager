@@ -1,0 +1,50 @@
+﻿@inherits FluxorComponent;
+@inject IState<GameLibraryState> _gameLibraryState;
+@inject IState<SettingsState> _settingsState;
+@inject IDispatcher _dispatcher;
+
+@if (scanning)
+{
+    <h3>Searching</h3>
+}
+else if (hasData)
+{
+    <div class="game-grid">
+        @foreach (var game in games)
+        {
+            <UnmanagedGameControl Game=@game AddGame=Save />
+        }
+    </div>
+}
+else
+{
+    if (HasFolders)
+    {
+        <h3>No new/untracked games found in:</h3>
+        foreach(var folder in LibraryFolders)
+        {
+            <h3>@folder</h3>
+        }
+    }
+    else
+    {
+        <h3>No game folders found, add some</h3>
+    }
+}
+
+@code
+{
+    private List<string> LibraryFolders =>
+        _settingsState.Value.Settings
+        .GameLibrarySettings.Folders
+        .Select(_ => _.Path).ToList();
+
+    private bool HasFolders => LibraryFolders.Any();
+        
+    private List<LocalGame> games => _gameLibraryState.Value.Games.Where(_ => !_.Saved).ToList();
+    private bool scanning => _gameLibraryState.Value.Scanning;
+    private bool hasData => _gameLibraryState.Value.Games.Where(_ => !_.Saved).Any();
+
+    private void Save(LocalGame game) =>
+        _dispatcher.Dispatch(new OpenEditModalAction(game));
+}

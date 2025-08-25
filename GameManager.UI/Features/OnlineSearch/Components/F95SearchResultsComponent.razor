@@ -1,0 +1,94 @@
+﻿@using GameManager.UI.Features.GameLibrary.Components.ExistingGames
+@using GameManager.UI.Features.OnlineSearch.Actions
+@using GameManager.UI.Features.OnlineSearch.Actions.SaveSearchResult
+@inherits FluxorComponent;
+@inject IState<OnlineSearchState> _f95SearchState;
+@inject IState<GameLibraryState> _gameLibraryState;
+@inject IState<SettingsState> _settingsState;
+@inject IDispatcher _dispatcher;
+@inject NavigationManager _navigation;
+
+@if (searching)
+{
+    <h3>Searching</h3>
+}
+else if (hasData)
+{
+    <F95SearchPaginationComponent />
+    <div class="game-grid">
+        @foreach (var game in results)
+        {
+            @if (_gameLibraryState.Value.Games.Any(_ => _.F95Game?.Id == game.Id))
+            {
+                <ExistingGameComponent Processing=false Game="_gameLibraryState.Value.Games.Single(_=> _.F95Game?.Id == game.Id)" />
+            }
+            else
+            {
+                <GameSummaryControl Game=game>
+                    <ExtraContent>
+                        @if (selectedGame == null)
+                        {
+                            <SelectList TValue=string TItem=string
+                        Data=@rootFoldersPaths
+                        TextField=@(_ => _)
+                        ValueField=@(_ => _)
+                        @bind-SelectedValue=@selectedRootFolder />
+                        }
+                    </ExtraContent>
+                    <Buttons>
+                        <Button Color=Color.Primary @onclick=@(args => BindToLocalGame(game))>@SaveSearchResultButtonText</Button>
+                        <Button Color=Color.Primary @onclick=@(args => OpenLink(game))><Icon Name=IconName.ExternalLinkSquareAlt /></Button>
+                    </Buttons>
+                </GameSummaryControl>
+            }
+        }
+    </div>
+    <F95SearchPaginationComponent />
+}
+else
+{
+    <h3>No Results found</h3>
+}
+
+
+
+@code
+{
+    private bool searching => _f95SearchState.Value.IsSearching;
+    private List<F95Game> results => _f95SearchState.Value.Result.Body.Games;
+    private bool hasData => results.Any();
+
+    private LocalGame selectedGame => _f95SearchState.Value.SelectedGame;
+
+    private List<GameLibraryFolder> rootFodlers => _settingsState.Value.Settings.GameLibrarySettings.Folders;
+    private List<string> rootFoldersPaths => rootFodlers.Select(_ => _.Path).ToList();
+
+    private string selectedRootFolder { get; set; }
+
+    private string SaveSearchResultButtonText =>
+        selectedGame == null ? "Add Game" : $"Bind to {selectedGame.Title}";
+
+    protected override void OnInitialized()
+    {
+        selectedRootFolder = rootFoldersPaths.FirstOrDefault();
+        base.OnInitialized();
+    }
+
+    private void BindToLocalGame(F95Game searchResult)
+    {
+        var localGame = selectedGame;
+        if (localGame == null)
+        {
+            localGame = new LocalGame(searchResult, rootFodlers.First(_ => _.Path == selectedRootFolder));
+        }
+
+        _dispatcher.Dispatch(new SaveSearchResultAction(searchResult, localGame));
+        if (selectedGame != null)
+        {
+            _navigation.NavigateTo("/");
+        }
+    }
+
+    private void OpenLink(F95Game game) =>
+        _dispatcher.Dispatch(new OpenGameInBrowserAction(game));
+}

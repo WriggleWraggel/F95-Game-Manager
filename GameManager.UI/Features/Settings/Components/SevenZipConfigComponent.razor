@@ -1,0 +1,27 @@
+﻿@using GameManager.UI.Features.F95Login.Actions
+
+@inherits FluxorComponent;
+@inject IState<SettingsState> _settingsState;
+@inject IDispatcher _dispatcher;
+
+<EditForm Model="Settings" OnValidSubmit="HandleValidSubmit">
+    <Card>
+        <CardHeader>
+            <h3>7Zip Install Location</h3>
+        </CardHeader>
+        <CardBody>
+            <Field>
+                <FieldLabel>Path</FieldLabel>
+                <TextEdit @bind-Text="Settings.SevenZipPath" />
+            </Field>
+            <Button Color="Color.Success" Type="Blazorise.ButtonType.Submit">Save</Button>
+        </CardBody>
+    </Card>
+</EditForm>
+
+
+@code {
+    private AppSettings Settings => _settingsState.Value.Settings;
+
+    private void HandleValidSubmit() => _dispatcher.Dispatch(new SaveSettingsAction());
+}

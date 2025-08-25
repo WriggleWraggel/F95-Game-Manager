@@ -1,0 +1,62 @@
+﻿@using GameManager.UI.Features.F95Login
+@using GameManager.UI.Features.GameUpdater.Actions
+@using GameManager.UI.Features.GameUpdater.Actions.GetUpdates
+@using GameManager.UI.Features.GameUpdater.Controls
+@inherits FluxorComponent
+@inject IState<GameLibraryState> _gameLibraryState
+@inject IState<F95LoginState> _loginState
+@inject IState<GameUpdaterState> _updaterState
+@inject IDispatcher _dispatcher
+
+<div class="game-grid">
+    <Repeater Items="UpdatableGames">
+        <GameSummaryControl Game="context">
+            <ExtraRightBadges>
+                <Tooltip Text="Last pulled F95 version">
+                    <Badge Color="Color.Dark">@context.F95Game!.Version</Badge>
+                </Tooltip>
+                <Tooltip Text="Last pulled F95 Update Date">
+                    <Badge Color="Color.Dark">@context.F95Game!.ThreadLastUpdatedDate?.ToString("d")</Badge>
+                </Tooltip>
+            </ExtraRightBadges>
+            <ExtraContent>
+                <Paragraph>
+                    <Text>F95 Updated Date: @context.F95Game?.ThreadLastUpdatedDate?.ToString("d")</Text>
+                </Paragraph>
+                <Paragraph>
+                    <Text>Archive File Last Updated: @context.ArchiveFileLastUpdated?.ToString("d")</Text>
+                </Paragraph>
+            </ExtraContent>
+            <Buttons>
+                <Button Color="Color.Primary" @onclick="@(args => OpenLink(context))"><Icon Name="IconName.ExternalLinkSquareAlt" /></Button>
+                <Tooltip Text=@($"Open Folder {context.RootFolder.Path}")>
+                    <Button Color="Color.Primary" @onclick="@(args => OpenFolder(context))"><Icon Name="IconName.FolderOpen" /></Button>
+                </Tooltip>
+                <Tooltip Text="Edit">
+                    <Button Color="Color.Primary" @onclick="@(args => Edit(context))"><Icon Name="IconName.Edit" /></Button>
+                </Tooltip>
+                <Button Color="Color.Danger" @onclick="@(args => IgnoreUpdate(context))">Ignore</Button>
+            </Buttons>
+        </GameSummaryControl>
+    </Repeater>
+</div>
+
+@code {
+
+    private List<LocalGame> UpdatableGames => _gameLibraryState.Value.Games.Where(_ => _.UpdateAvailable).ToList();
+
+    private void OpenLink(LocalGame game) =>
+        _dispatcher.Dispatch(new OpenGameInBrowserAction(game));
+
+    private void OpenFolder(LocalGame game) =>
+        _dispatcher.Dispatch(new OpenGameFolderAction(game));
+
+    private void Edit(LocalGame game) =>
+        _dispatcher.Dispatch(new OpenEditModalAction(game));
+
+    private void IgnoreUpdate(LocalGame game)
+    {
+        game.UpdateAvailable = false;
+        _dispatcher.Dispatch(new SaveLocalGameAction(game));
+    }
+}

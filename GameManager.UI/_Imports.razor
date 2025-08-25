@@ -1,0 +1,56 @@
+﻿@using System.Net.Http
+@using Microsoft.AspNetCore.Components.Forms
+@using Microsoft.AspNetCore.Components.Routing
+@using Microsoft.AspNetCore.Components.Web
+@using Microsoft.AspNetCore.Components.Web.Virtualization
+@using Microsoft.JSInterop
+@using Microsoft.Extensions.Logging
+
+@using Fluxor
+@using Fluxor.Blazor.Web.Components
+
+@using Blazorise
+@using Blazorise.Components
+@using Blazorise.Snackbar
+
+@using GameManager.UI.Controls
+
+@using GameManager.UI.Features.IGames.Actions
+
+@using GameManager.UI.Features.Settings
+@using GameManager.UI.Features.Settings.Actions.Set
+@using GameManager.UI.Features.Settings.Actions.Save
+
+@using GameManager.UI.Features.OnlineSearch
+@using GameManager.UI.Features.OnlineSearch.Actions
+@using GameManager.UI.Features.OnlineSearch.Actions.SearcbF95Games
+@using GameManager.UI.Features.OnlineSearch.Components
+
+@using GameManager.UI.Features.TopSeachBar
+@using GameManager.UI.Features.TopSeachBar.Components
+
+@using GameManager.UI.Features.F95Login
+
+@using GameManager.UI.Features.GameUpdater.Components
+@using GameManager.UI.Features.GameUpdater.Actions.GetUpdates
+
+@using GameManager.UI.Features.GameLibrary.Components
+@using GameManager.UI.Features.GameLibrary.Controls
+@using GameManager.UI.Features.GameLibrary.Actions.GetExistingGames
+@using GameManager.UI.Features.GameLibrary.Actions.GetNewGames
+@using GameManager.UI.Features.GameLibrary.Actions.RunGame
+@using GameManager.UI.Features.GameLibrary.Actions.EditGame
+@using GameManager.UI.Features.GameLibrary.Actions.OpenGameFolder
+@using GameManager.UI.Features.GameLibrary.Actions.SaveGame
+@using GameManager.UI.Features.GameLibrary.Actions.FilterGames
+@using GameManager.UI.Features.GameLibrary.Actions.DeleteGame
+
+
+@using GameManager.UI.Features.GameArchiveImporter
+@using GameManager.UI.Features.GameArchiveImporter.Actions.Scan
+@using GameManager.UI.Features.GameArchiveImporter.Actions.Map
+@using GameManager.UI.Features.GameArchiveImporter.Actions.Move
+@using GameManager.UI.Features.GameArchiveImporter.Actions.UnZipLinkedArchive
+@using GameManager.UI.Features.GameArchiveImporter.Components
+
+@using GameManager.UI.Features.Notifcations.Actions

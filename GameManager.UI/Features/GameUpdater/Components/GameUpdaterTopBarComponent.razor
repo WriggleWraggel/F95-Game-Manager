@@ -1,0 +1,63 @@
+﻿@using GameManager.UI.Features.F95Login
+@using GameManager.UI.Features.GameUpdater.Actions
+@using GameManager.UI.Features.GameUpdater.Actions.GetUpdates
+@inherits FluxorComponent
+@inject IState<GameLibraryState> _gameLibraryState
+@inject IState<F95LoginState> _loginState
+@inject IState<GameUpdaterState> _updaterState
+@inject IDispatcher _dispatcher
+@inject NavigationManager _navigationManager
+
+@if (!IsLoggedIn)
+{
+    <Button Color=Color.Danger @onclick=ShowAuthSettings><Icon Name=IconName.ExclamationTriangle />Not connected to f95</Button>
+}
+else if (Searching)
+{
+    <Button Color=Color.Success Loading=true Disabled=true> @UpdatingText</Button>
+}
+else if (!HaveGamesToUpdate)
+{
+    <Button Color=Color.Primary @onclick=CheckForUpdates><Icon Name=IconName.Sync /> Check For Updates</Button>
+}
+else
+{
+    <Button Color=Color.Success @onclick=ShowUpdates><Icon Name=IconName.Sync /> @ButtonText</Button>
+}
+
+@code {
+    private bool IsLoggedIn => _loginState.Value.IsLoggedIn;
+    private bool Searching => _updaterState.Value.SearchingForNewData;
+    private bool HaveGamesToUpdate => _gameLibraryState.Value.Games.Any(_ => _.UpdateAvailable);
+    private int GamesToUpdate => _gameLibraryState.Value.Games.Count(_ => _.UpdateAvailable);
+    private int UpdatableGames => _gameLibraryState.Value.Games.Count(_ => _.F95Game != null);
+    private int Progress => _updaterState.Value.GamesCheckedProgress;
+    private string ButtonText => $"{GamesToUpdate} Game Updates";
+    private string UpdatingText => $"Updating {Progress}/{UpdatableGames}";
+
+    private void CheckForUpdates() => _dispatcher.Dispatch(new GetF95UpdatesForLocalGamesAction());
+    private void ShowUpdates() => _navigationManager.NavigateTo("updates");
+    private void ShowAuthSettings() => _dispatcher.Dispatch(new OpenAuthModalAction());
+
+    private Timer? UpdateTimer;
+
+    protected override void OnInitialized()
+    {
+        UpdateTimer = new Timer((e) => AutoUpdate(), null, TimeSpan.FromSeconds(20), TimeSpan.FromMinutes(5));
+
+        base.OnInitialized();
+    }
+
+    private void AutoUpdate()
+    {
+        if (!IsLoggedIn || Searching)
+            return;
+
+        CheckForUpdates();
+    }
+
+    protected void Dispose(bool disposing)
+    {
+        UpdateTimer?.Dispose();
+    }
+}

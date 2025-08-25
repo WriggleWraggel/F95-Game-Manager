@@ -1,0 +1,110 @@
+﻿@using GameManager.UI.Features.GameArchiveImporter.Actions
+@using GameManager.UI.Features.GameArchiveImporter.Actions.Move
+@using System.Text.RegularExpressions
+@using GameManager.UI.Features.GameArchiveImporter.Actions.SeachForMatchingGame
+@inherits FluxorComponent
+@inject IState<GameLibraryState> _gameLibraryState
+@inject IState<GameArchiveImporterState> _gameArchiveImporterState
+@inject IState<OnlineSearchState> _f95SearchState;
+@inject NavigationManager _navigationManger
+@inject IDispatcher _dispatcher
+
+<Card>
+    <CardHeader>
+        <Button Color="@Color.Primary" @onclick="@Rescan">ReScan</Button>
+    </CardHeader>
+    <CardBody>
+        @if ( map?.Processing ?? true )
+        {
+            <div>Processing</div>
+        }
+        else
+        {
+            <Field>
+                @if ( Game != null )
+                {
+                    <FileMapViewGameComponent Game=Game/>
+                }
+            </Field>
+            <Field>
+                <FieldLabel>Detected File</FieldLabel>
+                <MemoEdit Disabled=true Text=@Path.GetFileName(map.FilePath)/>
+            </Field>
+            <Fields>
+                <Field>
+                    <FieldLabel>Select Game</FieldLabel>
+                    <FieldBody>
+                        <Autocomplete
+                            Placeholder="Select Game"
+                            FreeTyping=false
+                            Data=localGames
+                            TItem=GameSelectModel TValue=Guid?
+                            Filter="AutocompleteFilter.Contains"
+                            TextField=@(_ => _.Title)
+                            ValueField=@(_ => _.Id)
+                            SelectedValue="@map.GameId" SelectedValueChanged="GameSelectionUpdated"/>
+                    </FieldBody>
+                </Field>
+                <Field>
+                    <FieldLabel>Version</FieldLabel>
+                    <FieldBody>
+                        <TextEdit @bind-Text=map.Version Placeholder="Version"/>
+                    </FieldBody>
+                </Field>
+            </Fields>
+            <Field>
+                @if ( Game != null && !string.IsNullOrWhiteSpace(Game.ArchiveFile) )
+                {
+                    <Check TValue="bool" @bind-Checked=map.RemoveOldFile>@RemoveOldFileText</Check>
+                }
+            </Field>
+            <CardActions>
+                <Button Color=Color.Primary @onclick=MoveFile Disabled=@(map.GameId == null)>
+                    <Icon Name=@("fa-file-import")/>
+                </Button>
+                <Button Color=Color.Primary @onclick=Search>
+                    <Icon Name=IconName.Search />
+                </Button>
+            </CardActions>
+        }
+    </CardBody>
+</Card>
+
+@code
+{
+    private class GameSelectModel
+    {
+        public Guid? Id { get; set; }
+        public string Title { get; set; }
+    }
+
+    [Parameter, EditorRequired]
+    public string FilePath { get; set; }
+
+    private FileMap? map => _gameArchiveImporterState.Value.FileMaps.FirstOrDefault(_ => _.FilePath == FilePath);
+
+    private IEnumerable<GameSelectModel> localGames => _gameLibraryState.Value.Games
+        .Select(_ => new GameSelectModel { Id = _.Id, Title = _.Title });
+
+    private LocalGame? Game => _gameLibraryState.Value.Games.FirstOrDefault(_ => _.Id == map.GameId);
+
+    private string RemoveOldFileText => $"Remove {Path.GetFileName(Game.ArchiveFile)}?";
+
+    private string LabelText => $"Detected File: {map.FilePath}";
+    
+    private void Rescan() => 
+        _dispatcher.Dispatch(new ScanAllDownloadFoldersAction());
+
+    private void MoveFile(MouseEventArgs args)
+        => _dispatcher.Dispatch(new MoveFileToLocalGameFolderAction(map));
+
+    private void Search(MouseEventArgs args)
+        => _dispatcher.Dispatch(new SearchForMatchingGameAction(map.FilePath));
+
+
+    private void GameSelectionUpdated(Guid? gameId)
+    {
+        map.GameId = gameId;
+        map.Version = Game?.F95Game?.Version;
+    }
+}

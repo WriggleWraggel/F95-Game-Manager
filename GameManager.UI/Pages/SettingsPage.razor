@@ -1,0 +1,14 @@
+﻿@page "/settings"
+
+@inject IDispatcher _dispatcher;
+
+<h3>Settings</h3>
+<div class="settings-container">
+    <GameManager.UI.Features.Settings.Components.F95AuthDetailsComponent />
+    @*<GameManager.UI.Features.Settings.Components.F95DefaultSearchSettingsComponent/>*@
+</div>
+<div class="settings-container">
+    <GameManager.UI.Features.Settings.Components.LibraryFoldersComponent ScanEnabled="false"/>
+    <GameManager.UI.Features.Settings.Components.DownloadFoldersComponent />
+    <GameManager.UI.Features.Settings.Components.SevenZipConfigComponent />
+</div>

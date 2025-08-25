@@ -1,0 +1,63 @@
+﻿@using GameManager.UI.Features.GameLibrary.Actions
+@inherits FluxorComponent
+@inject IState<GameArchiveImporterState> _gameArchiveImporterState
+@inject IState<SettingsState> _settingsState
+@inject IDispatcher _dispatcher
+
+@if (folderExist)
+{
+    @if (Scanning)
+    {
+        <Button Color=Color.Success Disabled=true><Icon Name="IconName.Sync" />Searching</Button>
+    }
+    else if (!FilesDetected)
+    {
+        <Button Color=Color.Success><Icon Name="IconName.CheckCircle" />No Compressed Files</Button>
+    }
+    else
+    {
+        <Button Color=Color.Secondary @onclick=@(arg => ShowUpdates())><Icon Name="IconName.Sync" />@ButtonText</Button>
+    }
+}
+else
+{
+    <Button Color=Color.Danger @onclick=@(arg => AddDownloadFolders())><Icon Name="IconName.Add" />Add Import Folders</Button>
+}
+
+@code {
+    private bool Scanning => _gameArchiveImporterState.Value.Scanning;
+    private bool FilesDetected => _gameArchiveImporterState.Value.FileMaps.Any();
+    private string ButtonText => $"{_gameArchiveImporterState.Value.FileMaps.Count()} Files Found";
+    private bool folderExist => _settingsState.Value.Settings.ImportFolders.Any();
+
+    private Timer? UpdateTimer;
+
+    protected override void OnInitialized()
+    {
+        UpdateTimer = new Timer((e) => AutoScan(), null, TimeSpan.Zero, TimeSpan.FromMinutes(5));
+
+        base.OnInitialized();
+    }
+
+    private void ShowUpdates()
+    {
+        _dispatcher.Dispatch(new MapLocalGamesToDetectedFilesAction());
+        _dispatcher.Dispatch(new OpenModalAction("Map Files", typeof(MapFilesComponent)));
+    }
+
+    private void AutoScan()
+    {
+        if (!folderExist)
+            return;
+
+        _dispatcher.Dispatch(new ScanAllDownloadFoldersAction());
+    }
+
+    protected void Dispose(bool disposing)
+    {
+        UpdateTimer?.Dispose();
+    }
+
+    private void AddDownloadFolders() =>
+        _dispatcher.Dispatch(new OpenDownloadFoldersModalAction());
+}

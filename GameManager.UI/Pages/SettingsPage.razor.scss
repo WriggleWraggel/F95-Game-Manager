@@ -1,0 +1,17 @@
+﻿h3 {
+    color: white;
+}
+
+.settings-container {
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+
+    ::deep .card {
+        height: 100%;
+
+        .card-header {
+            height: 100%;
+        }
+    }
+}

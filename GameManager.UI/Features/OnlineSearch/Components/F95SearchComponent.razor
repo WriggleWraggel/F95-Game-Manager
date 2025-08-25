@@ -1,0 +1,55 @@
+﻿@using GameManager.UI.Features.OnlineSearch.Actions
+@using GameManager.UI.Features.OnlineSearch.Actions.SearcbF95Games
+@inherits FluxorComponent;
+@inject IState<OnlineSearchState> _f95SearchState;
+@inject IState<SettingsState> _settingsState;
+@inject IDispatcher _dispatcher;
+
+<EditForm Model="search" OnValidSubmit="HandleValidSubmit">
+    <Card>
+        <CardHeader>
+            <CardTitle>Search F95</CardTitle>
+        </CardHeader>
+        <CardBody>
+            <Field>
+                <FieldBody>
+                    <TextEdit Placeholder="Title" @bind-Text="search.Term" />
+                </FieldBody>
+            </Field>
+            @*<Field>
+                <FieldBody>
+                    <F95EngineSelectorControl @bind-GameEngineValues="_gamePrefixes"/>
+                </FieldBody>
+            </Field>
+            <Field>
+                <FieldBody>
+                    <F95GenreSelectorControl @bind-GameGenreValues="_gameGenres"/>
+                </FieldBody>
+            </Field>*@
+            <Button Color="Color.Primary" Type="Blazorise.ButtonType.Submit"><Icon Name="IconName.Search" />Search</Button>
+        </CardBody>
+    </Card>
+</EditForm>
+
+
+@code {
+
+    private List<F95Tag> _gameGenres = new();
+    private List<F95GamePrefix> _gamePrefixes = new();
+
+    protected override void OnInitialized()
+    {
+        _gameGenres = _settingsState.Value.Settings.SearchSettings.DefaultF95Tags;
+        _gamePrefixes = _settingsState.Value.Settings.SearchSettings.DefaultF95Prefixes;
+        base.OnInitialized();
+    }
+
+    private F95SearchProperties search => _f95SearchState.Value.Search;
+
+    private void HandleValidSubmit()
+    {
+        search.Tags = _gameGenres;
+        search.Prefixes = _gamePrefixes;
+        _dispatcher.Dispatch(new SearchF95GamesAction(search));
+    }
+}

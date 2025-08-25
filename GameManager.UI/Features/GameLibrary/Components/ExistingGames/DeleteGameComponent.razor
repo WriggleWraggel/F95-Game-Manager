@@ -1,0 +1,28 @@
+@inherits FluxorComponent;
+@inject IDispatcher _dispatcher;
+@inject IState<GameLibraryState> _gameLibraryState;
+
+<Card>
+    <EditForm Model="@Options" OnValidSubmit="@InternalSubmit">
+        <Switch TValue="bool" @bind-Checked="@Options.DeleteArchives">Delete Archives</Switch>
+        <Switch TValue="bool" @bind-Checked="@Options.DeleteUnarchivedGame">Delete Unarchived Game</Switch>
+        <Switch TValue="bool" @bind-Checked="@Options.DeleteMods">Delete Mods</Switch>
+        <Switch TValue="bool" @bind-Checked="@Options.DeleteGame">Delete Entire Game</Switch>
+        <Button Color="@Color.Danger" Type="@ButtonType.Submit" Loading="@Deleting" Disabled="@Deleting">Delete</Button>
+    </EditForm>
+</Card>
+
+@code {
+    [Parameter, EditorRequired]
+    public LocalGame Game { get; set; } = new();
+
+    private DeleteGameOptions Options { get; set; } = new();
+    
+    private bool Deleting => _gameLibraryState.Value
+        .GameMetaData.FirstOrDefault(_ => _.Id == Game.Id)?.Processing ?? false;
+
+    private void InternalSubmit(EditContext context)
+    {
+        _dispatcher.Dispatch(new DeleteGameAction(Game, Options));
+    }
+}

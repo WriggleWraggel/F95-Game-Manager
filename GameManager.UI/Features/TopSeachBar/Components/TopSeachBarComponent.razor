@@ -1,0 +1,37 @@
+﻿@inherits FluxorComponent;
+@inject IState<OnlineSearchState> _f95SearchState;
+@inject IDispatcher _dispatcher;
+@inject NavigationManager _navigationManger
+
+<EditForm Model="model" OnValidSubmit="HandleValidSubmit">
+    <div style="display:flex">
+        <TextEdit Text="@model.SearchTerm" TextChanged="OnSearchChange" Placeholder="Search" />
+        <Button Color="Color.Primary" Type="Blazorise.ButtonType.Submit"><Icon Name="IconName.Search" /></Button>
+    </div>
+</EditForm>
+
+@code {
+    private class TopBarSearchModel
+    {
+        public string SearchTerm { get; set; } = "";
+    }
+
+    private TopBarSearchModel model = new TopBarSearchModel();
+
+    private F95SearchProperties f95SearchProps => _f95SearchState.Value.Search;
+
+    private void HandleValidSubmit()
+    {
+        f95SearchProps.Term = model.SearchTerm;
+        //TODO FIX THIS SO WE DONT BIND TO THE STATE
+        _dispatcher.Dispatch(new SearchF95GamesAction(f95SearchProps));
+        _navigationManger.NavigateTo("search");
+    }
+
+    private Task OnSearchChange(string value)
+    {
+        model.SearchTerm = value;
+        _dispatcher.Dispatch(new FilterLibraryByTitleAction(model.SearchTerm));
+        return Task.CompletedTask;
+    }
+}

@@ -1,0 +1,19 @@
+﻿.top-row {
+  display: flex;
+  flex: 0;
+  background-color: black;
+  align-items: center;
+  justify-content: space-between;
+}
+.top-row .heading-group {
+  display: flex;
+  align-items: center;
+}
+.top-row .heading {
+  width: 250px;
+  text-align: center;
+}
+.top-row .heading-button {
+  padding-left: 5px;
+  padding-right: 5px;
+}

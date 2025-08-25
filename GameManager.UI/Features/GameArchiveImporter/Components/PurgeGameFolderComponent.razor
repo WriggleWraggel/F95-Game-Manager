@@ -1,0 +1,50 @@
+@using GameManager.UI.Features.GameArchiveImporter.Actions.PurgeGameFolder
+@inherits FluxorComponent
+@inject IDispatcher _dispatcher
+
+<Card>
+    <CardBody>
+        <Field>
+            <FieldLabel>@DetectedFoldersText</FieldLabel>
+            <MemoEdit Disabled="true" Text="@string.Join(Environment.NewLine, GameFolders)" />
+        </Field>
+        <Field>
+            <Check TValue="bool" @bind-Checked="PurgeFiles">@PurgeFilesText</Check>
+        </Field>
+    </CardBody>
+    <CardActions>
+        <Button Color="Color.Primary" @onclick="Continue">
+            <Icon Name="IconName.Forward" />
+        </Button>
+    </CardActions>
+</Card>
+
+@code {
+    [Parameter, EditorRequired] 
+    public LocalGame Game { get; set; } = new();
+
+    [Parameter, EditorRequired] 
+    public List<string> GameFolders { get; set; } = new();
+
+    private bool PurgeFiles { get; set; }
+    
+    private string GameFolder => Path.Join(Game.FullPath, SettingsConsts.GameFolderName);
+
+    private string PurgeFilesText => $"Remove folders in {GameFolder}?";
+    
+    private string DetectedFoldersText => $"Detected Folders in {GameFolder}";
+
+    private void Continue(MouseEventArgs args)
+    {
+        if ( PurgeFiles )
+        {
+            _dispatcher.Dispatch(new PurgeGameFolderThenUnzipAction(Game, GameFolders));
+        }
+        else
+        {
+            _dispatcher.Dispatch(new UnZipGameAction(Game));
+        }
+
+        _dispatcher.Dispatch(new CloseModalAction());
+    }
+}

@@ -1,0 +1,76 @@
+﻿@using GameManager.UI.Features.GameUpdater
+@using GameManager.UI.Features.Settings.Actions.Init
+@inherits FluxorLayout
+@inject IState<SettingsState> _settingsState
+@inject IDispatcher _dispatcher
+
+<Fluxor.Blazor.Web.StoreInitializer/>
+<Blazorise.ThemeProvider Theme="@theme">
+    <div class="page">
+        <TopRow/>
+        <div class="main-panel">
+            <div class="menu">
+                <NavMenu/>
+            </div>
+            <div class="content">
+                <ErrorBoundary>
+                    <ChildContent>
+                        <NotificationProvider/>
+                    </ChildContent>
+                    <ErrorContent>
+                        <div class="alert alert-danger">
+                            An error has occurred while loading the NotificationProvider.
+                        </div>
+                    </ErrorContent>
+                </ErrorBoundary>
+                @if ( initialized )
+                {
+                    <ErrorBoundary>
+                        <ChildContent>
+                            @Body
+                        </ChildContent>
+                        <ErrorContent>
+                            <div class="alert alert-danger">
+                                An error has occurred while loading the main content.
+                            </div>
+                        </ErrorContent>
+                    </ErrorBoundary>
+                }
+                else
+                {
+                    <div>Initializing settings</div>
+                }
+                <MessageProvider/>
+            </div>
+        </div>
+    </div>
+    <GameManager.UI.Features.Modal.Components.ModalWrapper/>
+
+</Blazorise.ThemeProvider>
+
+@code {
+
+    private Theme theme = new Theme
+    {
+        //BackgroundOptions = new ThemeBackgroundOptions
+        //{
+        //    Primary = "#181a1d",
+        //    Body = "#181a1d",
+        //    Dark = "#181a1d",
+        //    Light = "#181a1d",
+        //},
+    };
+
+    private bool initialized => _settingsState.Value.Initialized;
+
+    protected override void OnInitialized()
+    {
+        if ( !initialized )
+        {
+            _dispatcher.Dispatch(new InitSettingsAction());
+        }
+
+        base.OnInitialized();
+    }
+
+}

@@ -1,0 +1,38 @@
+﻿<Card Class="game-card">
+    <CardHeader>
+        <div class="cover-wrapper">
+            <div class="cover" style="@backgroundImageStyle" />
+        </div>
+        <div class="label-wrapper">
+            <Badge Color="Color.Secondary" Style="color: black">@Game.Version</Badge>
+            <Badge Color="Color.Primary" Style="color: black">@Game.F95Game?.Version</Badge>
+        </div>
+        <Heading Size="HeadingSize.Is3">@Game.Title</Heading>
+    </CardHeader>
+    <CardBody>
+        <Paragraph>
+            <Text>F95 Updated Date: @Game.F95Game?.ThreadLastUpdatedDate?.ToString("d")</Text>
+        </Paragraph>
+        <Paragraph>
+            <Text>Last Unzipped Date: @Game.ArchiveUnzipedDate?.ToString("d")</Text>
+        </Paragraph>
+        <CardActions Display="@(new FluentDisplay().WithFlex(DisplayType.Flex))"
+                     Flex="@(new FluentFlex().WithJustifyContent(FlexJustifyContent.Between))">
+            @Buttons
+        </CardActions>
+    </CardBody>
+</Card>
+
+
+@code
+{
+    [Parameter, EditorRequired]
+    public LocalGame Game { get; set; }
+
+    [Parameter]
+    public RenderFragment Buttons { get; set; }
+
+    private string backgroundImageStyle =>
+        string.IsNullOrWhiteSpace(Game.F95Game?.CoverUrl.ToString()) ?
+            "" : $"background-image:url({Game.F95Game?.CoverUrl.ToString()})";
+}

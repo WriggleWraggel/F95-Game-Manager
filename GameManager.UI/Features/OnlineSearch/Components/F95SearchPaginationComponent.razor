@@ -1,0 +1,76 @@
+﻿@inherits FluxorComponent;
+@inject IState<OnlineSearchState> _f95SearchState;
+@inject IDispatcher _dispatcher;
+
+<Pagination>
+    <PaginationItem Disabled="@IsPageNavigationDisabled(PreviousString)" @onclick="Previous">
+        <PaginationLink>
+            <span aria-hidden="true">«</span>
+        </PaginationLink>
+    </PaginationItem>
+    @{
+        for (var i = 1; i <= pages; i++)
+        {
+            var pageNumberString = i.ToString();
+            <PaginationItem @key="pageNumberString" Active=@(currentPageString == pageNumberString)>
+                <PaginationLink Page="@pageNumberString" Clicked=@((_) => ChangePage(int.Parse(_)))>
+                    @pageNumberString
+                </PaginationLink>
+            </PaginationItem>
+        }
+    }
+    <PaginationItem Disabled="@IsPageNavigationDisabled(NextString)" @onclick="Next">
+        <PaginationLink>
+            <span aria-hidden="true">»</span>
+        </PaginationLink>
+    </PaginationItem>
+</Pagination>
+
+@code
+{
+    private int pages => _f95SearchState.Value.Result.Body.Pagination.Total;
+    private int currentPage => _f95SearchState.Value.Result.Body.Pagination.Page;
+    private F95SearchProperties search => _f95SearchState.Value.Search;
+
+    private const string PreviousString = "previous";
+    private const string NextString = "next";
+    private string currentPageString => $"{currentPage}";
+
+    private bool IsPageNavigationDisabled(string navigation)
+    {
+        if (navigation.Equals(PreviousString))
+        {
+            return currentPageString.Equals("1");
+        }
+        else if (navigation.Equals(NextString))
+        {
+            return currentPageString.Equals(pages.ToString());
+        }
+        return false;
+    }
+
+    private void Previous()
+    {
+        if (currentPage > 1)
+        {
+            ChangePage(currentPage - 1);
+        }
+    }
+
+    private void Next()
+    {
+        var currentPageAsInt = int.Parse(currentPageString);
+        if (currentPage < pages)
+        {
+            ChangePage(currentPage + 1);
+        }
+    }
+
+    private void ChangePage(int page)
+    {
+        search.Page = page;
+        _dispatcher.Dispatch(new SearchF95GamesAction(search));
+    }
+}
+
+

@@ -1,0 +1,115 @@
+﻿<Card>
+    <EditForm OnValidSubmit="InternalSubmit" Model="Game">
+        <Field>
+            <FieldLabel>Title</FieldLabel>
+            <TextEdit @bind-Text="Game.Title" Placeholder="Enter title" Blur="InternalOnBlur" />
+        </Field>
+        <Field>
+            <FieldLabel>Version</FieldLabel>
+            <TextEdit @bind-Text="Game.Version" Placeholder="Enter Version" Blur="InternalOnBlur" />
+        </Field>
+        <Field>
+            <FieldLabel>F95 Version</FieldLabel>
+            @if (Game.F95Game is null)
+            {
+                <TextEdit Disabled=true Text="Not Linked to F95" />
+            }
+            else
+            {
+                <TextEdit @bind-Text=Game.F95Game.Version Placeholder="Enter Version" Blur=InternalOnBlur />
+            }
+        </Field>
+
+        <Field>
+            <FieldLabel>Custom Search Term</FieldLabel>
+            <TextEdit @bind-Text="Game.CustomSearchTerm" Placeholder="Enter Custom Search Term" Blur="InternalOnBlur" />
+        </Field>
+        <Field>
+            <FieldLabel>Description</FieldLabel>
+            <MemoEdit @bind-Text="Game.Description" Placeholder="Enter Description" Blur="InternalOnBlur" />
+        </Field>
+        <Field>
+            <Label>Status</Label>
+            <SelectList TValue="PlayStatus" TItem="PlayStatus"
+                        Data="@playStatuses"
+                        TextField="@(_ => _.ToString())"
+                        ValueField="@(_ => _)"
+                        @bind-SelectedValue="@Game.PlayStatus" />
+        </Field>
+        <Field>
+            <Label>Last Downloaded File</Label>
+            <SelectList TValue="string" TItem="string"
+                        Data="@LastDownloadFileSelection"
+                        TextField="@(_ => _)"
+                        ValueField="@(_ => _)"
+                        DefaultItemText=""
+                        DefaultItemValue=@("")
+                        SelectedValue=@(LastDownloadFileSelection.Contains(Game.ArchiveFile) ? Game.ArchiveFile : "")
+                        SelectedValueChanged="ArchiveFileOnChange" />
+        </Field>
+        <Field>
+            <Label>Launch Path</Label>
+            <SelectList TValue="string" TItem="string"
+                        Data="@PossibleGameFileSelection"
+                        TextField="@(_ => _)"
+                        ValueField="@(_ => _)"
+                        DefaultItemText=""
+                        DefaultItemValue=@("")
+                        SelectedValue=@(@PossibleGameFileSelection.Contains(Game.LaunchExePath) ? Game.LaunchExePath : "")
+                        SelectedValueChanged="LaunchExePathOnChange" />
+        </Field>
+        <Button Color="Color.Primary" Type="@ButtonType.Submit">Save</Button>
+    </EditForm>
+</Card>
+
+@code {
+    [Parameter, EditorRequired]
+    public LocalGame Game { get; set; } = new();
+
+    [Parameter, EditorRequired]
+    public EventCallback<LocalGame> OnSubmit { get; set; }
+
+    [Parameter]
+    public EventCallback<LocalGame> AutoSaveEvent { get; set; }
+
+    [Parameter, EditorRequired]
+    public List<string> LastDownloadFileSelection { get; set; } = new();
+
+    [Parameter, EditorRequired]
+    public List<string> PossibleGameFileSelection { get; set; } = new();
+
+    private List<PlayStatus> playStatuses = Enum.GetValues(typeof(PlayStatus)).Cast<PlayStatus>().ToList();
+
+    protected override void OnInitialized()
+    {
+        if ( !LastDownloadFileSelection.Any() )
+            Game.ArchiveFile = "";
+
+        base.OnInitialized();
+    }
+
+    private void InternalOnBlur(FocusEventArgs args)
+    {
+        AutoSaveEvent.InvokeAsync(Game);
+    }
+
+    private void InternalSubmit(EditContext context)
+    {
+        var game = context.Model as LocalGame;
+        OnSubmit.InvokeAsync(game);
+    }
+
+    private void ArchiveFileOnChange(string value)
+    {
+        Game.ArchiveFile = value;
+        Game.ArchiveFileLastUpdated = DateTime.Now;
+        AutoSaveEvent.InvokeAsync(Game);
+    }
+
+    private void LaunchExePathOnChange(string value)
+    {
+        Game.LaunchExePath = value;
+        AutoSaveEvent.InvokeAsync(Game);
+    }
+}
+

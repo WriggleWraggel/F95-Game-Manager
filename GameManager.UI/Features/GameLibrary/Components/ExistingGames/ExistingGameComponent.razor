@@ -1,0 +1,140 @@
+﻿@inherits FluxorComponent;
+@inject IDispatcher _dispatcher;
+@inject IState<SettingsState> _settingsState;
+@inject NavigationManager _navigation;
+
+<GameSummaryControl Game="@Game" ShowOverlay="@true">
+    <BackgroundOverlay>
+        @if ( !string.IsNullOrWhiteSpace(Game.LaunchExePath) )
+        {
+            <Tooltip Text="@StartGameButtonTooltip">
+                <Button Color=StartGameButtonColor @onclick=@(args => StartGame(Game)) Disabled=@Processing>
+                    <Icon Name=@IconName.Play/>
+                </Button>
+            </Tooltip>
+        }
+        else
+        {
+            <Tooltip Text="Add Game launch path">
+                <Button Color=StartGameButtonColor Disabled="@true">
+                    <Icon Name=@IconName.Play/>
+                </Button>
+            </Tooltip>
+        }
+    </BackgroundOverlay>
+    <ExtraLeftBadges>
+        @*<Badge Color=Color.Info Style="color: black">@Game.LastPlayed?.ToString("d")</Badge>*@
+    </ExtraLeftBadges>
+    <ExtraRightBadges>
+        @if ( Game.F95Game is not null )
+        {
+            <Tooltip Text="Last pulled F95 version">
+                <Badge Color=Color.Dark>@Game.F95Game.Version</Badge>
+            </Tooltip>
+            <Tooltip Text="Last pulled F95 Update Date">
+                <Badge Color=Color.Dark>@Game.F95Game.ThreadLastUpdatedDate?.ToString("d")</Badge>
+            </Tooltip>
+        }
+    </ExtraRightBadges>
+    <Buttons>
+        @if ( Game.F95Game is null )
+        {
+            <Tooltip Text="Search">
+                <Button Color=Color.Primary @onclick=@(args => SearchF95ForGame(Game))>
+                    <Icon Name=@IconName.Search/>
+                </Button>
+            </Tooltip>
+        }
+        else
+        {
+            <Tooltip Text=@OpenLinkTipText>
+                <Button Color=@OpenLinkButtonColor @onclick=@(args => OpenLink(Game))>
+                    <Icon Name=@IconName.ExternalLinkSquareAlt/>
+                </Button>
+            </Tooltip>
+        }
+        @if ( !string.IsNullOrWhiteSpace(Game.ArchiveFile) )
+        {
+            <Tooltip Text=@UnzipToolTipText>
+                <Button Color=UnzipButtonColor @onclick=@(args => UnZipGame(Game)) Disabled=@UnZipDisabled>
+                    <Icon Name=@("fa-file-archive")/>
+                </Button>
+            </Tooltip>
+        }
+        @* Add delete button *@
+        <Tooltip Text="Delete">
+            <Button Color="Color.Danger" @onclick="@(args => DeleteGame(Game))" Disabled="@Processing">
+                <Icon Name="@IconName.Delete"/>
+            </Button>
+        </Tooltip>
+        <Tooltip Text=@($"Open Folder {Game.RootFolder.Path}")>
+            <Button Color="Color.Primary" @onclick="@(args => OpenFolder(Game))">
+                <Icon Name="@IconName.FolderOpen"/>
+            </Button>
+        </Tooltip>
+        <Tooltip Text="Edit">
+            <Button Color="Color.Primary" @onclick="@(args => Edit(Game))" Disabled="@Processing">
+                <Icon Name="@IconName.Edit"/>
+            </Button>
+        </Tooltip>
+    </Buttons>
+</GameSummaryControl>
+
+@code
+
+{
+    [Parameter, EditorRequired] public LocalGame Game { get; set; } = new();
+
+    [Parameter, EditorRequired] public bool Processing { get; set; }
+
+    private string SevenZipPath => _settingsState.Value.Settings.SevenZipPath;
+
+    private void Edit(LocalGame game) =>
+        _dispatcher.Dispatch(new OpenEditModalAction(game));
+
+    private void OpenFolder(LocalGame game) =>
+        _dispatcher.Dispatch(new OpenGameFolderAction(game));
+
+    private void OpenLink(LocalGame game) =>
+        _dispatcher.Dispatch(new OpenGameInBrowserAction(game));
+
+    private void StartGame(LocalGame game) =>
+        _dispatcher.Dispatch(new RunGameAction(game));
+
+    private void UnZipGame(LocalGame game) =>
+        _dispatcher.Dispatch(new PreProcessUnZipGameAction(game));
+
+    private void SearchF95ForGame(LocalGame game)
+    {
+        _dispatcher.Dispatch(new SearchLocalGameOnF95Action(game));
+        _navigation.NavigateTo("/search");
+    }
+
+    private void DeleteGame(LocalGame game) =>
+        _dispatcher.Dispatch(new OpenDeleteGameModalAction(game));
+
+    private bool UnZipDisabled => Processing || string.IsNullOrWhiteSpace(SevenZipPath);
+
+    //show primary color when archive has been unziped, else show success color
+    private Color UnzipButtonColor =>
+        Game.ArchiveUnzipedDate.HasValue ? Color.Primary : Color.Success;
+
+    private string UnzipToolTipText =>
+        string.IsNullOrWhiteSpace(SevenZipPath) ? "7Zip not configured" :
+        Game.ArchiveUnzipedDate.HasValue ? $"Uzip Archive - Unzipped on {Game.ArchiveUnzipedDate:d}" :
+        $"Unzip Updated Archive - Imported on {Game.ArchiveFileLastUpdated:d}";
+
+    //show primary color when archive has been unziped, else show success color
+    private Color OpenLinkButtonColor =>
+        Game.UpdateAvailable ? Color.Success : Color.Primary;
+
+    private string OpenLinkTipText =>
+        Game.UpdateAvailable ? $"Update detected, open webpage to download (Thread updated {Game.F95Game?.ThreadLastUpdatedDate:d}, archive file updated {Game.ArchiveFileLastUpdated:d}" : $"Open F95 Game Page";
+
+    //show an error color to indicate that you aren't playing the latest version
+    private Color StartGameButtonColor =>
+        Game.ArchiveUnzipedDate.HasValue ? Color.Primary : Color.Danger;
+
+    private string StartGameButtonTooltip =>
+        Game.ArchiveUnzipedDate.HasValue ? $"Start {Game.LaunchExePath}" : $"Not playing the latest archive. Updated:{Game.ArchiveFileLastUpdated:d}";
+}

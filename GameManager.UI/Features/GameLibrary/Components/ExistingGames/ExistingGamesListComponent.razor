@@ -1,0 +1,60 @@
+﻿@using System.Reflection
+@inherits FluxorComponent;
+@inject IState<GameLibraryState> _gameLibraryState;
+@inject IDispatcher _dispatcher;
+
+@if (scanning)
+{
+    <h3>Searching</h3>
+}
+else if (hasData)
+{
+    <GameLibraryFilterComponent />
+    <div class="game-grid">
+        @foreach (var game in games)
+        {
+            <ExistingGameComponent Game=game Processing=@(metaData.FirstOrDefault(_ => _.Id == game.Id)?.Processing ?? false) />
+        }
+    </div>
+}
+else
+{
+    <h3>No Local Games</h3>
+}
+
+@code
+{
+    private string titleFiler => _gameLibraryState.Value.Filter.TitleFilter;
+    private List<PlayStatus> playStatusFilter => _gameLibraryState.Value.Filter.PlayStatusFilters;
+    private PropertyInfo sortProp => _gameLibraryState.Value.Filter.SortProperty;
+    private GameLibaryFilterSortOrder sortOrder => _gameLibraryState.Value.Filter.SortOrder;
+
+    private List<LocalGame> games
+    {
+        get
+        {
+            var gameQueryable = _gameLibraryState.Value.Games.AsQueryable();
+            gameQueryable = gameQueryable
+            .Where(_ => _.Saved)
+            .Where(_ => string.IsNullOrEmpty(titleFiler) ?
+                true : _.Title.Contains(titleFiler, StringComparison.OrdinalIgnoreCase))
+            .Where(_ => !playStatusFilter.Any() ?
+                true : playStatusFilter.Contains(_.PlayStatus));
+
+            var orderedQueryable = sortOrder switch
+            {
+                GameLibaryFilterSortOrder.Ascending => gameQueryable.OrderBy(_ => sortProp.GetValue(_)),
+                GameLibaryFilterSortOrder.Descending => gameQueryable.OrderByDescending(_ => sortProp.GetValue(_)),
+                _ => throw new Exception("Unknown sort order"),
+            };
+
+            orderedQueryable.ThenBy(_ => _.Title);
+
+            return orderedQueryable.ToList();
+        }
+    }
+
+    private List<GameMetaData> metaData => _gameLibraryState.Value.GameMetaData;
+    private bool scanning => _gameLibraryState.Value.Scanning;
+    private bool hasData => _gameLibraryState.Value.Games.Where(_ => _.Saved).Any();
+}

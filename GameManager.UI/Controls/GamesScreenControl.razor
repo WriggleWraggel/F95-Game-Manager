@@ -1,0 +1,13 @@
+﻿@using Flurl
+@foreach (var imageUrl in ImageUrls)
+{
+    <div class="col">
+        <Image Source=@imageUrl.ToString() />
+    </div>
+}
+
+@code
+{
+    [Parameter, EditorRequired]
+    public List<Url> ImageUrls { get; set; }
+}

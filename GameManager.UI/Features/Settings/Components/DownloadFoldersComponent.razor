@@ -1,0 +1,43 @@
+﻿@using GameManager.UI.Features.Settings.Actions.DownloadFolders
+@using GameManager.UI.Features.Settings.Actions.Save
+@inherits FluxorComponent;
+@inject IState<SettingsState> _settingsState;
+@inject IDispatcher _dispatcher;
+@inject NavigationManager _navigation;
+
+
+<EditForm Model="importFolders" OnValidSubmit="OnValidSubmit">
+    <Card>
+        <CardHeader>
+            <h3>Download Folder Locations</h3>
+        </CardHeader>
+        <CardBody>
+            @foreach (var folder in importFolders)
+            {
+                <Field Horizontal=true>
+                    <FieldLabel>Download Folder</FieldLabel>
+                    <FieldBody>
+                        <TextEdit @bind-Text=folder.Path />
+                        <Button Color=Color.Primary @onclick=@(args => ScanForDownloadedGames(folder)) Loading=busy Disabled=busy>Scan</Button>
+                    </FieldBody>
+                </Field>
+            }
+            <Button Color="Color.Primary" @onclick="@(args => AddGameLibraryFolder())">Add</Button>
+            <Button Color="Color.Success" Type="Blazorise.ButtonType.Submit" Disabled="busy">Save</Button>
+        </CardBody>
+    </Card>
+</EditForm>
+@code {
+    private List<ArchiveImportFolder> importFolders => _settingsState.Value.Settings.ImportFolders;
+    private bool busy => _settingsState.Value.Busy;
+
+    private void AddGameLibraryFolder() => _dispatcher.Dispatch(new AddNewDownloadFolderAction());
+
+    private void ScanForDownloadedGames(ArchiveImportFolder downloadFolder)
+    {
+        _dispatcher.Dispatch(new SaveSettingsAction());
+        _dispatcher.Dispatch(new ScanDownloadFolderAction(downloadFolder));
+    }
+
+    private void OnValidSubmit(EditContext context) => _dispatcher.Dispatch(new SaveSettingsAction());
+}

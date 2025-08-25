@@ -1,0 +1,61 @@
+﻿@inherits FluxorComponent;
+@inject IDispatcher _dispatcher;
+@inject NavigationManager _navigation;
+
+<GameSummaryControl Game="Game">
+    <ExtraRightBadges>
+        @if (Game.F95Game is not null)
+        {
+            <Tooltip Text="Last pulled F95 version">
+                <Badge Color=Color.Dark>@Game.F95Game.Version</Badge>
+            </Tooltip>
+            <Tooltip Text="Last pulled F95 Update Date">
+                <Badge Color=Color.Dark>@Game.F95Game.ThreadLastUpdatedDate?.ToString("d")</Badge>
+            </Tooltip>
+        }
+    </ExtraRightBadges>
+    <Buttons>
+        @if (Game.F95Game is null)
+        {
+            <Tooltip Text="Search">
+                <Button Color=Color.Primary @onclick=@(args => SearchF95ForGame(Game))><Icon Name=IconName.Search /></Button>
+            </Tooltip>
+        }
+        else
+        {
+            <Tooltip Text=@OpenLinkTipText>
+                <Button Color=@OpenLinkButtonColor @onclick=@(args => OpenLink(Game))><Icon Name=IconName.ExternalLinkSquareAlt /></Button>
+            </Tooltip>
+        }
+        <Tooltip Text=@($"Open Folder {Game.RootFolder.Path}")>
+            <Button Color="Color.Primary" @onclick="@(args => OpenFolder(Game))"><Icon Name="IconName.FolderOpen" /></Button>
+        </Tooltip>
+    </Buttons>
+</GameSummaryControl>
+
+@code
+{
+    [Parameter, EditorRequired]
+    public LocalGame Game { get; set; } = new();
+
+    private void OpenFolder(LocalGame game) =>
+        _dispatcher.Dispatch(new OpenGameFolderAction(game));
+
+    private void OpenLink(LocalGame game) =>
+        _dispatcher.Dispatch(new OpenGameInBrowserAction(game));
+
+    //show primary color when archive has been unziped, else show success color
+    private Color OpenLinkButtonColor =>
+        Game.UpdateAvailable ? Color.Success : Color.Primary;
+
+    private string OpenLinkTipText =>
+        Game.UpdateAvailable ?
+            $"Update detected, open webpage to download (Thread updated {Game.F95Game?.ThreadLastUpdatedDate:d}, archive file updated {Game.ArchiveFileLastUpdated:d}" :
+            $"Open F95 Game Page";
+
+    private void SearchF95ForGame(LocalGame game)
+    {
+        _dispatcher.Dispatch(new SearchLocalGameOnF95Action(game));
+        _navigation.NavigateTo("/search");
+    }
+}

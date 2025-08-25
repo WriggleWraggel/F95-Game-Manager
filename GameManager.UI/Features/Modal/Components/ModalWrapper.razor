@@ -1,0 +1,27 @@
+﻿@inject IState<ModalState> _modalState
+@inject IDispatcher _dispatcher
+
+<Modal @ref="modalRef">
+    <ModalContent Centered="true">
+        <ModalHeader>
+            <ModalTitle>@title</ModalTitle>
+            <CloseButton />
+        </ModalHeader>
+        <ModalBody>
+            <DynamicComponent Type="@bodyComponentType" Parameters="@bodyComponentsParams" />
+        </ModalBody>
+    </ModalContent>
+</Modal>
+
+@code {
+    private Modal? modalRef;
+    private string title => _modalState.Value.ModalTitle;
+    private Type bodyComponentType => _modalState.Value.ModalBody;
+    private Dictionary<string, object> bodyComponentsParams => _modalState.Value.Parameters;
+
+    protected override void OnAfterRender(bool firstRender)
+    {
+        _dispatcher.Dispatch(new SetModalRef(modalRef ?? throw new Exception("Common Modal ref is null, somehow??")));
+        base.OnAfterRender(firstRender);
+    }
+}

@@ -1,0 +1,36 @@
+.page {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    background-color: var(--bs-dark);
+
+    .main-panel {
+        display: flex;
+        flex: 1;
+        overflow: hidden;
+
+        .menu {
+            height: 100vh;
+            position: sticky;
+            top: 0;
+        }
+
+        .content {
+            display: flex;
+            flex-flow: column;
+            flex: 1;
+            max-height: 100%;
+            overflow: auto;
+        }
+    }
+
+    ::deep .card {
+        background-color: var(--bs-gray);
+        color: white;
+    }
+
+    ::deep h3{
+        color:white;
+    }
+}

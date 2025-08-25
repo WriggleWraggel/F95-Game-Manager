@@ -1,0 +1,26 @@
+﻿@inherits FluxorComponent
+@inject IState<GameArchiveImporterState> _gameArchiveImporterState
+
+<Card>
+    @if (scanning)
+    {
+        <div>Scanning</div>
+    }
+    else if (!hasData)
+    {
+        <div>No compressed files found</div>
+    }
+    else
+    {
+        <Repeater Items=fileMap>
+            <FileMapComponent FilePath=@context.FilePath />
+        </Repeater>
+    }
+</Card>
+
+@code
+{
+    private bool scanning => _gameArchiveImporterState.Value.Scanning;
+    private bool hasData => fileMap.Any();
+    private List<FileMap> fileMap => _gameArchiveImporterState.Value.FileMaps;
+}

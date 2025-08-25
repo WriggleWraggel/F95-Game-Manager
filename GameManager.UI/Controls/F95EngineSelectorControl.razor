@@ -1,0 +1,37 @@
+﻿<Autocomplete Placeholder="Engines"
+              Multiple="true" FreeTyping="false"
+              Data="F95GameEnginePrefixes"
+              TItem="F95PrefixItem" TValue="F95GamePrefix"
+              TextField="@(_ => _.Name)"
+              ValueField="@(_ => _.Engine)"
+              SelectedValues="GameEngineValues"
+              SelectedValuesChanged="GameEngineValuesChanged"
+              SelectedTexts="GameEngineTexts"
+              SelectedTextsChanged="GameEngineTextsChanged" />
+
+@code {
+    [EditorRequired, Parameter]
+    public List<F95GamePrefix> GameEngineValues { get; set; } = new List<F95GamePrefix>();
+
+    [Parameter]
+    public EventCallback<List<F95GamePrefix>> GameEngineValuesChanged { get; set; }
+
+    [Parameter]
+    public List<string> GameEngineTexts { get; set; } = new();
+
+    [Parameter]
+    public EventCallback<List<string>> GameEngineTextsChanged { get; set; }
+
+    private class F95PrefixItem
+    {
+        public F95GamePrefix Engine { get; set; }
+        public string Name { get; set; } = "";
+    }
+
+    private static List<F95PrefixItem> F95GameEnginePrefixes { get; set; }
+           = F95Consts.F95GameEnginePrefixes.Select(_ => new F95PrefixItem()
+               {
+                   Engine = _,
+                   Name = _.ToString()
+               }).ToList();
+}

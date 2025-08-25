@@ -1,0 +1,20 @@
+﻿<Card>
+    <CardHeader>
+        @Game.Title
+    </CardHeader>
+    <CardBody>
+        @Game.FullPath
+        <CardActions>
+            <Button Color="Color.Primary" @onclick="@(args => AddGame.InvokeAsync(Game))">Add</Button>
+        </CardActions>
+    </CardBody>
+</Card>
+
+@code
+{
+    [Parameter, EditorRequired]
+    public LocalGame Game { get; set; }
+
+    [Parameter, EditorRequired]
+    public EventCallback<LocalGame> AddGame { get; set; }
+}

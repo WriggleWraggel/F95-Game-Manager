@@ -1,0 +1,122 @@
+﻿@using System.Reflection
+@using System.ComponentModel
+@inherits FluxorComponent;
+@inject IState<GameLibraryState> _gameLibraryState;
+@inject IDispatcher _dispatcher;
+
+<div class="filter-row">
+    <div class="sort-props">
+        <h3 class="heading">Sort:</h3>
+        <div class="sort-prop">
+            <SelectList TValue="string" TItem="string"
+                        Data="@GameProperties"
+                        TextField="@(_ => _)"
+                        ValueField="@(_ => _)"
+                        SelectedValue="@SelectedPropertyName"
+                        SelectedValueChanged="@SelectedPropertyNameOnChange" />
+        </div>
+        <div class="sort-prop">
+            <SelectList TValue="GameLibaryFilterSortOrder" TItem="GameLibaryFilterSortOrder"
+                        Data="@SortOrders"
+                        TextField="@(_ => _.ToString())"
+                        ValueField="@(_ => _)"
+                        SelectedValue="@SelectedSortOrder"
+                        SelectedValueChanged="@SelectedSortOrderOnChange" />
+        </div>
+    </div>
+    <div>
+        <div class="filter-props">
+            <div class="filter-prop">
+                <Autocomplete TItem="PlayStatus"
+                              TValue="PlayStatus"
+                              Data="@PlayStatuses"
+                              TextField="@(_ => _.ToString())"
+                              ValueField="@(_ => _)"
+                              Placeholder="Play status filter"
+                              SelectionMode="AutocompleteSelectionMode.Multiple"
+                              FreeTyping="false"
+                              SelectedValues="SelectedPlayStatuses"
+                              SelectedTexts="SelectedPlayStatusesTexts"
+                              SelectedValuesChanged="SelectedPlayStatusesOnChange"
+                              SelectedTextsChanged="SelectedPlayStatusesTextsOnChange">
+                </Autocomplete>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@code {
+    //get all properties from LocalGame
+    private static List<string> GameProperties { get; set; } =
+    typeof(LocalGame).GetProperties()
+    .Where(_ => _.GetCustomAttribute<DisplayNameAttribute>() != null)
+    .Select(_ => _.GetCustomAttribute<DisplayNameAttribute>()!.DisplayName).ToList();
+
+    //get all values from GameLibaryFilterSortOrder
+    private static List<GameLibaryFilterSortOrder> SortOrders { get; set; } =
+    Enum.GetValues(typeof(GameLibaryFilterSortOrder))
+    .Cast<GameLibaryFilterSortOrder>()
+    .ToList();
+
+    //get all values from PlayStatus
+    private static List<PlayStatus> PlayStatuses { get; set; } =
+    Enum.GetValues(typeof(PlayStatus))
+    .Cast<PlayStatus>()
+    .ToList();
+
+    private List<PlayStatus> SelectedPlayStatuses { get; set; } = new();
+    private List<string> SelectedPlayStatusesTexts { get; set; } = new();
+
+    private void SelectedPlayStatusesOnChange(List<PlayStatus> playStatuses)
+    {
+        SelectedPlayStatuses = playStatuses;
+        _dispatcher.Dispatch(new FilterByPlayStatusesAction(SelectedPlayStatuses));
+    }
+
+    private void SelectedPlayStatusesTextsOnChange(List<string> playStatuses)
+    {
+        SelectedPlayStatusesTexts = playStatuses;
+    }
+
+
+    //blazorise can't seem to bind to property info
+    private string SelectedPropertyName { get; set; } = "";
+
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        SelectedPropertyName = _gameLibraryState.Value.Filter
+            .SortProperty.GetCustomAttribute<DisplayNameAttribute>()?.DisplayName ?? 
+            throw new Exception("No sort property in state");
+
+        SelectedPlayStatuses = _gameLibraryState.Value.Filter.PlayStatusFilters.ToList();
+        SelectedPlayStatusesTexts = SelectedPlayStatuses.Select(_ => _.ToString()).ToList();
+    }
+
+
+    private PropertyInfo RealProperty
+    {
+        get
+        {
+            return typeof(LocalGame).GetProperties()
+            .First(_ => _.GetCustomAttribute<DisplayNameAttribute>()?.DisplayName == SelectedPropertyName);
+        }
+    }
+
+    private void SelectedPropertyNameOnChange(string prop)
+    {
+        SelectedPropertyName = prop;
+        _dispatcher.Dispatch(new SortLibraryByPropertyAction(RealProperty, SelectedSortOrder));
+    }
+
+    private GameLibaryFilterSortOrder SelectedSortOrder { get; set; } = GameLibaryFilterSortOrder.Descending;
+
+    private void SelectedSortOrderOnChange(GameLibaryFilterSortOrder sortOrder)
+    {
+        SelectedSortOrder = sortOrder;
+
+        _dispatcher.Dispatch(new SortLibraryByPropertyAction(RealProperty, SelectedSortOrder));
+    }
+}

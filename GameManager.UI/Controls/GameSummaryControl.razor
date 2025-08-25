@@ -1,0 +1,75 @@
+﻿@*Cant use the class on the card component with css isoloation*@
+<div class="game-card">
+    <Card>
+        <CardHeader>
+            <!-- on hover show BackgroundOverlay-->
+            <div class="cover-wrapper">
+                <div class="cover" style="@backgroundImageStyle">
+                    @if(ShowOverlay)
+                    {
+                        <div class="cover-overlay">
+                            @BackgroundOverlay
+                        </div>
+                    }
+                </div>
+            </div>
+            <div class="label-wrapper">
+                <div>
+                    <Badge Color="Color.Info" Style="color: black">@Game.GameEngine.ToString()</Badge>
+                    <Badge Color="Color.Info" Style="color: black">@Game.Version</Badge>
+                    @ExtraLeftBadges
+                </div>
+                <div>
+                    @ExtraRightBadges
+                </div>
+            </div>
+            <Heading Size="HeadingSize.Is3">@Game.Title</Heading>
+        </CardHeader>
+        <CardBody>
+            @ExtraContent
+            <CardActions Display="@(new FluentDisplay().WithFlex(DisplayType.Flex))"
+                         Flex="@(new FluentFlex().WithJustifyContent(FlexJustifyContent.Between))">
+                @Buttons
+            </CardActions>
+        </CardBody>
+    </Card>
+</div>
+
+@code
+{
+    [Parameter, EditorRequired]
+    public IGame Game { get; set; }
+    
+    [Parameter]
+    public bool ShowOverlay { get; set; } = false;
+
+    [Parameter]
+    public RenderFragment ExtraContent { get; set; }
+    
+    [Parameter]
+    public RenderFragment? BackgroundOverlay { get; set; }
+
+    [Parameter]
+    public RenderFragment ExtraLeftBadges { get; set; }
+
+    [Parameter]
+    public RenderFragment ExtraRightBadges { get; set; }
+
+    [Parameter]
+    public RenderFragment Buttons { get; set; }
+
+    private string backgroundImageStyle => string.IsNullOrWhiteSpace(Game.CoverUrl.ToString()) ? "" : $"background-image:url({Game.CoverUrl.ToString()})";
+
+    private bool detailsDisplayed { get; set; } = false;
+    //private string style => detailsDisplayed ? "" : "height:0;";
+
+    private void OnMouseOver()
+    {
+        detailsDisplayed = true;
+    }
+
+    private void OnMouseLeave()
+    {
+        detailsDisplayed = false;
+    }
+}

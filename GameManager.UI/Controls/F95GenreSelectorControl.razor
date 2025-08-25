@@ -1,0 +1,45 @@
+﻿<Autocomplete Placeholder="Genre"
+              FreeTyping="false"
+              SelectionMode="AutocompleteSelectionMode.Checkbox"
+              CloseOnSelection="false"
+              Data="F95GameGenres"
+              TItem="F95TagItem"
+              TValue="F95Tag"
+              TextField="@((_) => _.Name)"
+              ValueField="@((_) => _.Tag)"
+              SelectedValues="GameGenreValues"
+              SelectedValuesChanged="GameGenreValuesChanged"
+              SelectedTexts="GameGenreTexts"
+              SelectedTextsChanged="GameGenreTextsChanged">
+    <NotFoundContent> Tag @context was not found! :( </NotFoundContent>
+</Autocomplete>
+
+@code {
+    [EditorRequired, Parameter]
+    public List<F95Tag> GameGenreValues { get; set; } = new();
+
+    [Parameter]
+    public EventCallback<List<F95Tag>> GameGenreValuesChanged { get; set; }
+
+    [Parameter]
+    public List<string> GameGenreTexts { get; set; } = new();
+
+    [Parameter]
+    public EventCallback<List<string>> GameGenreTextsChanged { get; set; }
+
+    private class F95TagItem
+    {
+        public F95Tag Tag { get; set; }
+        public string Name { get; set; } = "";
+    }
+
+    private static List<F95TagItem> F95GameGenres { get; set; } =
+        Enum.GetValues(typeof(F95Tag))
+           .Cast<F95Tag>()
+           .Select(_ => new F95TagItem()
+               {
+                   Tag = _,
+                   Name = _.ToString()
+               }
+           ).ToList();
+}

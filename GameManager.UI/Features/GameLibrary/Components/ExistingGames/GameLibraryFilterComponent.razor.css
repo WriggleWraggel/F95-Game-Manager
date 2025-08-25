@@ -1,0 +1,15 @@
+﻿.filter-row {
+  display: flex;
+  flex: 0;
+  color: white;
+  margin: 0 15px;
+  align-items: center;
+  justify-content: space-between;
+}
+.filter-row .sort-props {
+  display: flex;
+  align-items: center;
+}
+.filter-row .sort-props .sort-prop {
+  margin: 0 10px;
+}

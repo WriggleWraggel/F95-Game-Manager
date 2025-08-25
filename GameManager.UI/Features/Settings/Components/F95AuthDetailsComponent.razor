@@ -1,0 +1,34 @@
+﻿@using GameManager.UI.Features.F95Login.Actions
+
+@inherits FluxorComponent;
+@inject IState<SettingsState> _settingsState;
+@inject IDispatcher _dispatcher;
+
+<EditForm Model="f95AuthSettings" OnValidSubmit="HandleValidSubmit">
+    <Card>
+        <CardHeader>
+            <h3>F95 Auth Details</h3>
+        </CardHeader>
+        <CardBody>
+            <Field>
+                <FieldLabel>Username</FieldLabel>
+                <TextEdit @bind-Text="f95AuthSettings.Username" />
+            </Field>
+            <Field>
+                <FieldLabel>Password</FieldLabel>
+                <TextEdit @bind-Text="f95AuthSettings.Password" />
+            </Field>
+            <Button Color="Color.Primary" @onclick="@(args => Authenticate())">Authenticate</Button>
+            <Button Color="Color.Success" Type="Blazorise.ButtonType.Submit">Save</Button>
+        </CardBody>
+    </Card>
+</EditForm>
+
+
+@code {
+    private F95AuthSettings f95AuthSettings => _settingsState.Value.Settings.AuthSettings ?? new();
+
+    private void HandleValidSubmit() => _dispatcher.Dispatch(new SaveSettingsAction());
+
+    private void Authenticate() => _dispatcher.Dispatch(new F95AuthAction());
+}

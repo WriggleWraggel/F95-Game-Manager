@@ -1,0 +1,48 @@
+﻿@using GameManager.UI.Features.Settings.Actions.Save
+@inherits FluxorComponent;
+@inject IState<SettingsState> _settingsState;
+@inject IDispatcher _dispatcher;
+@inject NavigationManager _navigation;
+
+<EditForm Model="libraryFolders" OnValidSubmit="OnValidSubmit">
+    <Card>
+        <CardHeader>
+            <h3>Library Folders</h3>
+        </CardHeader>
+        <CardBody>
+            @foreach (var folder in libraryFolders)
+            {
+                <Field>
+                    <FieldLabel>Root Folder</FieldLabel>
+                    <TextEdit @bind-Text=folder.Path />
+                    @if (ScanEnabled)
+                    {
+                        <Button Color=Color.Primary @onclick=@(args => GetNewGames(folder)) Disabled=busy>Scan</Button>
+                    }
+                    
+                </Field>
+            }
+            <Button Color="Color.Primary" @onclick="@(args => AddGameLibraryFolder())">Add</Button>
+            <Button Color="Color.Success" Type="Blazorise.ButtonType.Submit" Disabled="busy">Save</Button>
+        </CardBody>
+    </Card>
+</EditForm>
+
+
+@code {
+    [Parameter, EditorRequired]
+    public bool ScanEnabled { get; set; } = false;
+
+    private List<GameLibraryFolder> libraryFolders => _settingsState.Value.Settings.GameLibrarySettings.Folders;
+    private bool busy => _settingsState.Value.Busy;
+
+    private void AddGameLibraryFolder() => _dispatcher.Dispatch(new AddGameLibraryFolderAction());
+
+    private void GetNewGames(GameLibraryFolder rootFolder)
+    {
+        _dispatcher.Dispatch(new SaveSettingsAction());
+        _dispatcher.Dispatch(new GetNewGamesAction(rootFolder));
+    }
+
+    private void OnValidSubmit(EditContext context) => _dispatcher.Dispatch(new SaveSettingsAction());
+}

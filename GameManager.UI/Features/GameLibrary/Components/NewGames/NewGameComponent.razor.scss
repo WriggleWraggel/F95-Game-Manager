@@ -1,0 +1,7 @@
+﻿.game-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(20%, 1fr));
+    grid-column-gap: 15px;
+    grid-row-gap: 15px;
+    margin: 0 15px 0 15px;
+}
