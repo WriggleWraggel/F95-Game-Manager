@@ -1,0 +1,10 @@
+{
+  "solution": {
+    "path": "./F95GameManager.sln",
+    "projects": [
+      "GameManager.Core\\GameManager.Core.csproj",
+      "GameManager.Core.Tests\\GameManager.Core.Tests.csproj",
+      "GameManager.UI\\GameManager.UI.csproj"
+    ]
+  }
+}

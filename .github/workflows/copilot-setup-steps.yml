@@ -37,13 +37,10 @@ jobs:
           cache: true
       
       - name: restore
-        run: |
-          dotnet restore GameManager.Core/GameManager.Core.csproj
-          dotnet restore GameManager.UI/GameManager.UI.csproj
-          dotnet restore GameManager.Core.Tests/GameManager.Core.Tests.csproj
+        run: dotnet restore F95GameManager.slnf
 
       - name: build
-        run: |
-          dotnet build GameManager.Core/GameManager.Core.csproj --no-restore
-          dotnet build GameManager.UI/GameManager.UI.csproj --no-restore
-          dotnet build GameManager.Core.Tests/GameManager.Core.Tests.csproj --no-restore
+        run: dotnet build F95GameManager.slnf --no-restore
+
+      - name: test
+        run: dotnet test F95GameManager.slnf --no-build
