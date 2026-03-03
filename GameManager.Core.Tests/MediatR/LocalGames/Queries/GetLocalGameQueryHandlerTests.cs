@@ -8,6 +8,7 @@ using Newtonsoft.Json;
 
 namespace GameManager.Core.Tests.MediatR.LocalGames.Queries;
 
+[Collection("LocalGameTests")]
 public class GetLocalGameQueryHandlerTests
 {
 

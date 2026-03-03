@@ -13,7 +13,7 @@ public class SaveSettingsCommandHandlerTests
     public async Task CreatesJsonFileAndSavesSettingsToIt()
     {
         var appPath = Path.GetDirectoryName(Assembly.GetEntryAssembly()!.Location);
-        var filePath = Path.Combine(appPath!, "settings.json");
+        var filePath = Path.Combine(appPath!, SettingsConsts.SettingsFileName);
         var appSettings = new AppSettings
         {
             AuthSettings = new F95AuthSettings
@@ -46,7 +46,7 @@ public class SaveSettingsCommandHandlerTests
     public async Task OverridesJsonFileAndSavesSettingsToIt()
     {
         var appPath = Path.GetDirectoryName(Assembly.GetEntryAssembly()!.Location);
-        var filePath = Path.Combine(appPath!, "settings.json");
+        var filePath = Path.Combine(appPath!, SettingsConsts.SettingsFileName);
 
         using ( var file = File.CreateText(filePath) )
             await file.WriteAsync("test");

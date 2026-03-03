@@ -9,6 +9,7 @@ using Newtonsoft.Json.Linq;
 
 namespace GameManager.Core.Tests.MediatR.LocalGames.Commands;
 
+[Collection("LocalGameTests")]
 public class SaveLocalGameCommandHandlerTests : IDisposable
 {
     private NewtonSoftJsonSerializerWrapper _wrapper;
