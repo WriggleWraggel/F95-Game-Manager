@@ -6,10 +6,10 @@ namespace GameManager.Core.Tests.MediatR.Downloads.Commands
 {
     public class MegaDownloadCommandTests
     {
-        [Fact]
+        [IntegrationFact]
         public async Task DownloadWorks()
         {
-            var dest = "D:\\HGames\\MegaDownloadTest";
+            var dest = Path.Combine(Path.GetTempPath(), "MegaDownloadTest");
             var hut = new MegaDownloadCommandHandler();
             var res = await hut.Handle(new MegaDownloadCommand
             {

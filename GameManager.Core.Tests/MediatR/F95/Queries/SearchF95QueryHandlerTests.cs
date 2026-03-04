@@ -4,7 +4,7 @@ namespace GameManager.Core.Tests.MediatR.F95.Queries;
 
 public class SearchF95QueryHandlerTests
 {
-    [Fact]
+    [IntegrationFact]
     public async Task SearchReturnsAFullPageWithNoSearchTerm()
     {
         var wrapper = new HttpSessionWrapper();

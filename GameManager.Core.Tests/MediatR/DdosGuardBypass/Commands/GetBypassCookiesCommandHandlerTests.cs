@@ -6,7 +6,7 @@ namespace GameManager.Core.Tests.MediatR.F95.Commands;
 
 public class GetBypassCookiesCommandHandlerTests
 {
-    [Fact]
+    [IntegrationFact]
     public async Task BypassSuccessful()
     {
         var wrapper = new HttpSessionWrapper();

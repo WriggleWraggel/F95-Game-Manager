@@ -21,7 +21,7 @@ public class GameFolderStructureMigrationIntegrationTests
         _testGame = new LocalGame()
         {
             FolderName = "Game of Whores",
-            RootFolder = new GameLibraryFolder() { Path = @"D:\HGames" },
+            RootFolder = new GameLibraryFolder() { Path = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName()) },
         };
     }
 
@@ -71,6 +71,7 @@ public class GameFolderStructureMigrationIntegrationTests
         _fileRepo.MakeFolderSafely(Path.Combine(_testGame.FullPath, SettingsConsts.SavesFolderName));
         _fileRepo.MakeFolderSafely(Path.Combine(_testGame.FullPath, SettingsConsts.ArchivesFolderName));
         _fileRepo.MakeFolderSafely(Path.Combine(_testGame.FullPath, SettingsConsts.ModsFolderName));
+        _fileRepo.MakeFolderSafely(Path.Combine(_testGame.FullPath, "GameFiles"));
 
         var expectedGamePath = Path.Combine(_testGame.FullPath, SettingsConsts.GameFolderName);
 

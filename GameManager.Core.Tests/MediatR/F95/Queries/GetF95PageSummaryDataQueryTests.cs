@@ -5,7 +5,7 @@ namespace GameManager.Core.Tests.MediatR.F95.Queries;
 
 public class GetF95PageSummaryDataQueryTests
 {
-    [Fact]
+    [IntegrationFact]
     public async Task GetsSummaryData()
     {
         var hut = new GetF95PageSummaryDataQueryHandler(new F95Client());

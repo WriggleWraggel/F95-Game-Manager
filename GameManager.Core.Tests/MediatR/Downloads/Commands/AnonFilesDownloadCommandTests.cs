@@ -6,10 +6,10 @@ namespace GameManager.Core.Tests.MediatR.Downloads.Commands
 {
     public class AnonFilesDownloadCommandTests
     {
-        [Fact]
+        [IntegrationFact]
         public async Task DownloadWorks()
         {
-            var dest = "D:\\HGames\\AnonDownloadTest";
+            var dest = Path.Combine(Path.GetTempPath(), "AnonDownloadTest");
             var hut = new AnonFilesDownloadCommandHandler();
             var res = await hut.Handle(new AnonFilesDownloadCommand
             {
