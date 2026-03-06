@@ -3,13 +3,17 @@ using GameManager.Core.Migrations;
 
 namespace GameManager.Core.Tests.Migrations;
 
-public class GameFolderStructureMigrationIntegrationTests
+public class GameFolderStructureMigrationIntegrationTests : IDisposable
 {
     private ILocalGameRepo _localGameRepo;
     private IFileRepo _fileRepo;
     private LocalGame _testGame;
+    private readonly string _testRootFolder;
+
     public GameFolderStructureMigrationIntegrationTests()
     {
+        _testRootFolder = Path.Combine(Path.GetTempPath(), "F95GameManagerTests", Guid.NewGuid().ToString());
+
         _localGameRepo = Substitute.For<ILocalGameRepo>();
         _localGameRepo
             .GameGamesInRootFolders(Arg.Any<List<GameLibraryFolder>>(), Arg.Any<CancellationToken>())
@@ -17,12 +21,19 @@ public class GameFolderStructureMigrationIntegrationTests
 
         _fileRepo = new FileRepo();
 
-        //TODO make this an actual test game with folders and files that can be predicted
         _testGame = new LocalGame()
         {
             FolderName = "Game of Whores",
-            RootFolder = new GameLibraryFolder() { Path = @"D:\HGames" },
+            RootFolder = new GameLibraryFolder() { Path = _testRootFolder },
         };
+
+        Directory.CreateDirectory(_testGame.FullPath);
+    }
+
+    public void Dispose()
+    {
+        if (Directory.Exists(_testRootFolder))
+            Directory.Delete(_testRootFolder, true);
     }
 
     [Trait("Category", "Integration")]
@@ -71,6 +82,9 @@ public class GameFolderStructureMigrationIntegrationTests
         _fileRepo.MakeFolderSafely(Path.Combine(_testGame.FullPath, SettingsConsts.SavesFolderName));
         _fileRepo.MakeFolderSafely(Path.Combine(_testGame.FullPath, SettingsConsts.ArchivesFolderName));
         _fileRepo.MakeFolderSafely(Path.Combine(_testGame.FullPath, SettingsConsts.ModsFolderName));
+
+        var extraFolder = Path.Combine(_testGame.FullPath, "GameFiles");
+        Directory.CreateDirectory(extraFolder);
 
         var expectedGamePath = Path.Combine(_testGame.FullPath, SettingsConsts.GameFolderName);
 

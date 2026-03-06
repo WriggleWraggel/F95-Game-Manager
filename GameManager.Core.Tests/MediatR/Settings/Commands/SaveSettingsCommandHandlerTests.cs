@@ -7,13 +7,20 @@ using Newtonsoft.Json;
 
 namespace GameManager.Core.Tests.MediatR.Settings.Commands;
 
-public class SaveSettingsCommandHandlerTests
+public class SaveSettingsCommandHandlerTests : IDisposable
 {
+    private readonly string _testPath;
+
+    public SaveSettingsCommandHandlerTests()
+    {
+        _testPath = Path.Combine(Path.GetTempPath(), "F95GameManagerTests", Guid.NewGuid().ToString());
+        Directory.CreateDirectory(_testPath);
+    }
+
     [Fact]
     public async Task CreatesJsonFileAndSavesSettingsToIt()
     {
-        var appPath = Path.GetDirectoryName(Assembly.GetEntryAssembly()!.Location);
-        var filePath = Path.Combine(appPath!, "settings.json");
+        var filePath = Path.Combine(_testPath, SettingsConsts.SettingsFileName);
         var appSettings = new AppSettings
         {
             AuthSettings = new F95AuthSettings
@@ -25,13 +32,13 @@ public class SaveSettingsCommandHandlerTests
             {
                 Folders = new List<GameLibraryFolder>
                 {
-                    new GameLibraryFolder{ Path = @"D:\Test" }
+                    new GameLibraryFolder{ Path = Path.Combine(Path.GetTempPath(), "Test") }
                 }
             }
         };
 
         var settingsSub = Substitute.For<ISettingsPathProvider>();
-        settingsSub.Path.Returns(appPath);
+        settingsSub.Path.Returns(_testPath);
 
         var hut = new SaveSettingsCommandHandler(new NewtonSoftJsonSerializerWrapper(), settingsSub);
         await hut.Handle(new SaveSettingsCommand
@@ -40,13 +47,12 @@ public class SaveSettingsCommandHandlerTests
         File.Exists(filePath).Should().BeTrue();
         var res = await File.ReadAllTextAsync(filePath);
         res.Should().Be(JsonConvert.SerializeObject(appSettings, Formatting.Indented));
-        File.Delete(filePath);
     }
+
     [Fact]
     public async Task OverridesJsonFileAndSavesSettingsToIt()
     {
-        var appPath = Path.GetDirectoryName(Assembly.GetEntryAssembly()!.Location);
-        var filePath = Path.Combine(appPath!, "settings.json");
+        var filePath = Path.Combine(_testPath, SettingsConsts.SettingsFileName);
 
         using ( var file = File.CreateText(filePath) )
             await file.WriteAsync("test");
@@ -68,13 +74,13 @@ public class SaveSettingsCommandHandlerTests
             {
                 Folders = new List<GameLibraryFolder>
                 {
-                    new GameLibraryFolder{ Path = @"D:\Test" }
+                    new GameLibraryFolder{ Path = Path.Combine(Path.GetTempPath(), "Test") }
                 }
             }
         };
 
         var settingsSub = Substitute.For<ISettingsPathProvider>();
-        settingsSub.Path.Returns(appPath);
+        settingsSub.Path.Returns(_testPath);
 
         var hut = new SaveSettingsCommandHandler(new NewtonSoftJsonSerializerWrapper(), settingsSub);
         await hut.Handle(new SaveSettingsCommand
@@ -83,6 +89,11 @@ public class SaveSettingsCommandHandlerTests
         File.Exists(filePath).Should().BeTrue();
         var res = await File.ReadAllTextAsync(filePath);
         res.Should().Be(JsonConvert.SerializeObject(appSettings, Formatting.Indented));
-        File.Delete(filePath);
+    }
+
+    public void Dispose()
+    {
+        if (Directory.Exists(_testPath))
+            Directory.Delete(_testPath, true);
     }
 }
