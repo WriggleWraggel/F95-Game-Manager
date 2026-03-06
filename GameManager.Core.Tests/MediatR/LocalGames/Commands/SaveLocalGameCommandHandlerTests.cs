@@ -45,12 +45,7 @@ public class SaveLocalGameCommandHandlerTests : IDisposable
                 CoverUrl = "test cover",
                 Screens = new List<Flurl.Url> { new Flurl.Url("testScreen.com"), new Flurl.Url("testsScreen2.com") },
                 Version = "TestVersion",
-                Tags = new List<Data.F95.F95Tag> { Data.F95.F95Tag.SciFi, Data.F95.F95Tag.Adventure },
-                DownloadLinks = new List<Data.F95.F95DownloadLink>
-                {
-                    new Data.F95.F95DownloadLink(),
-                    new Data.F95.F95DownloadLink()
-                }
+                Tags = new List<Data.F95.F95Tag> { Data.F95.F95Tag.SciFi, Data.F95.F95Tag.Adventure }
 
             },
             LaunchExePath = Path.Join(appPath, _folderName, "testGameName.exe"),
@@ -98,12 +93,7 @@ public class SaveLocalGameCommandHandlerTests : IDisposable
                 CoverUrl = "test cover",
                 Screens = new List<Flurl.Url> { new Flurl.Url("testScreen.com"), new Flurl.Url("testsScreen2.com") },
                 Version = "TestVersion",
-                Tags = new List<Data.F95.F95Tag> { Data.F95.F95Tag.SciFi, Data.F95.F95Tag.Adventure },
-                DownloadLinks = new List<Data.F95.F95DownloadLink>
-                {
-                    new Data.F95.F95DownloadLink(),
-                    new Data.F95.F95DownloadLink()
-                }
+                Tags = new List<Data.F95.F95Tag> { Data.F95.F95Tag.SciFi, Data.F95.F95Tag.Adventure }
             },
             LaunchExePath = Path.Combine(appPath!, "testGameName", "testGameName.exe")
         };

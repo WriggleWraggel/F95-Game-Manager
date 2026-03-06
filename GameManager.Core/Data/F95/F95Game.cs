@@ -18,15 +18,12 @@ public class F95Game : IGame
         Likes = f95Game.Likes;
         Rating = f95Game.Rating;
         ThreadLastUpdatedDate = f95Game.ThreadLastUpdatedDate;
-        DownloadLinks = f95Game.DownloadLinks;
     }
 
     [JsonProperty("cover")]
     public Url CoverUrl { get; set; } = new();
 
     public string Creator { get; set; } = string.Empty;
-
-    public List<F95DownloadLink> DownloadLinks { get; set; } = new();
 
     public Url GameUrl => new Url($"https://f95zone.to/threads/{Id}");
 
