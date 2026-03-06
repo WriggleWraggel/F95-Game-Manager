@@ -20,7 +20,6 @@
     <PackageReference Include="Flurl.Http.Newtonsoft" Version="0.9.1" />
     <PackageReference Include="HtmlAgilityPack" Version="1.11.65" />
     <PackageReference Include="MediatR" Version="12.4.1" />
-    <PackageReference Include="MegaApiClient" Version="1.10.4" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="8.0.8" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.8">
       <PrivateAssets>all</PrivateAssets>
@@ -32,7 +31,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="MediatR\Download\Queries\" />
     <Folder Include="MediatR\Search\" />
   </ItemGroup>
 
