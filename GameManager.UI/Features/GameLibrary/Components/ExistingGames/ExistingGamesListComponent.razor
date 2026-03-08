@@ -1,4 +1,12 @@
-﻿@using System.Reflection
+﻿@*
+    ExistingGamesListComponent
+    Main library view that shows all saved (tracked) games. While a folder scan is in
+    progress it displays a "Searching" indicator. When no saved games exist it shows
+    "No Local Games". Otherwise it renders a GameLibraryFilterComponent for sort/filter
+    controls followed by a grid of ExistingGameComponent cards. Filtering and sorting
+    are driven by GameLibraryState.
+*@
+@using System.Reflection
 @inherits FluxorComponent;
 @inject IState<GameLibraryState> _gameLibraryState;
 @inject IDispatcher _dispatcher;

@@ -1,4 +1,10 @@
-﻿@page "/libraryFolders"
+﻿@*
+    Scan Folders Page (/libraryFolders)
+    Scans the configured game library folders for new or untracked game directories.
+    Uses LibraryFoldersComponent to manage folder paths and trigger scans, and
+    NewGameComponent to display discovered but not-yet-saved games ready to be added.
+*@
+@page "/libraryFolders"
 @inherits FluxorComponent
 
 <GameManager.UI.Features.Settings.Components.LibraryFoldersComponent ScanEnabled="true"/>

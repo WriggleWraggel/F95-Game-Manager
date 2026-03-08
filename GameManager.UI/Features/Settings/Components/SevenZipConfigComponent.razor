@@ -1,4 +1,10 @@
-﻿@using GameManager.UI.Features.F95Login.Actions
+﻿@*
+    SevenZipConfigComponent
+    Settings card for specifying the local 7-Zip installation path. The path text
+    field is bound to AppSettings.SevenZipPath. Saving the form dispatches
+    SaveSettingsAction so the path is persisted and available for archive extraction.
+*@
+@using GameManager.UI.Features.F95Login.Actions
 
 @inherits FluxorComponent;
 @inject IState<SettingsState> _settingsState;

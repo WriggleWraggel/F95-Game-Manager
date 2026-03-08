@@ -1,4 +1,12 @@
-﻿@using GameManager.UI.Features.GameLibrary.Actions
+﻿@*
+    ArchiveImporterTopBarComponent
+    Top-bar button for the game archive importer feature. When no import folders are
+    configured it shows an "Add Import Folders" button. While scanning it shows a
+    disabled spinner. When no archive files are detected it shows a green check icon.
+    When files are detected it shows the count and opens a MapFilesComponent modal on
+    click. An auto-scan timer fires every 5 minutes to detect new archives.
+*@
+@using GameManager.UI.Features.GameLibrary.Actions
 @inherits FluxorComponent
 @inject IState<GameArchiveImporterState> _gameArchiveImporterState
 @inject IState<SettingsState> _settingsState

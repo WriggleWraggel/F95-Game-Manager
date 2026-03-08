@@ -1,4 +1,11 @@
-﻿@inherits FluxorComponent
+﻿@*
+    MapFilesComponent
+    Modal body that lists all detected archive files awaiting import. While scanning
+    it shows a "Scanning" indicator. When no files are present it shows "No compressed
+    files found". Otherwise it renders a FileMapComponent for each detected archive,
+    allowing the user to map, version, and import each file individually.
+*@
+@inherits FluxorComponent
 @inject IState<GameArchiveImporterState> _gameArchiveImporterState
 
 <Card>

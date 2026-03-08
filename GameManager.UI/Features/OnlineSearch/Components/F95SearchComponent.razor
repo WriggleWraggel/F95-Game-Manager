@@ -1,4 +1,11 @@
-﻿@using GameManager.UI.Features.OnlineSearch.Actions
+﻿@*
+    F95SearchComponent
+    Search form for querying the F95zone game database. The user types a title and
+    submits the form, which dispatches SearchF95GamesAction with the current search
+    term (and any default engine/genre prefixes from settings). Displays as a card
+    with a title field and a Search button.
+*@
+@using GameManager.UI.Features.OnlineSearch.Actions
 @using GameManager.UI.Features.OnlineSearch.Actions.SearcbF95Games
 @inherits FluxorComponent;
 @inject IState<OnlineSearchState> _f95SearchState;

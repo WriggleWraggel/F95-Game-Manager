@@ -1,4 +1,10 @@
-﻿@page "/"
+﻿@*
+    Index Page (/)
+    The main game library dashboard. Displays the full list of locally tracked games
+    via ExistingGamesListComponent, with filtering and sorting controls.
+    Users can launch, edit, delete, search or unzip games directly from here.
+*@
+@page "/"
 @using GameManager.UI.Features.GameLibrary.Components.ExistingGames
 @inherits FluxorComponent
 <ExistingGamesListComponent />

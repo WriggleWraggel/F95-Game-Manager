@@ -1,4 +1,12 @@
-﻿@inject IState<ModalState> _modalState
+﻿@*
+    ModalWrapper
+    Application-level dynamic modal host. Renders a Blazorise Modal whose title and
+    body component type are driven by ModalState. The body is instantiated via
+    DynamicComponent so any component can be displayed as a modal by dispatching
+    OpenModalAction with the desired type and parameters. After render the modal
+    reference is registered back into the store via SetModalRef.
+*@
+@inject IState<ModalState> _modalState
 @inject IDispatcher _dispatcher
 
 <Modal @ref="modalRef">

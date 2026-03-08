@@ -1,4 +1,11 @@
-﻿<Card>
+﻿@*
+    ManagedGameEditControl
+    Inline edit form for a locally tracked game. Fields include title, version, F95
+    version (read-only when unlinked), custom search term, description, play status,
+    last-downloaded archive file selection, and launch executable path. Auto-saves
+    on field blur and emits OnSubmit when the form is explicitly saved.
+*@
+<Card>
     <EditForm OnValidSubmit="InternalSubmit" Model="Game">
         <Field>
             <FieldLabel>Title</FieldLabel>

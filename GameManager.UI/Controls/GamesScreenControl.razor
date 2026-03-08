@@ -1,4 +1,10 @@
-﻿@using Flurl
+﻿@*
+    GamesScreenControl
+    Renders a responsive grid of screenshot images for a game. Each URL in the
+    ImageUrls list is displayed as a Bootstrap column with a Blazorise Image element.
+    Used inside edit modals and detail views to preview game screenshots.
+*@
+@using Flurl
 @foreach (var imageUrl in ImageUrls)
 {
     <div class="col">

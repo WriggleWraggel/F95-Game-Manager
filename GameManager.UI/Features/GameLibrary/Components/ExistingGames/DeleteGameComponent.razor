@@ -1,3 +1,10 @@
+@*
+    DeleteGameComponent
+    Modal body form for deleting a game. Presents toggle switches that let the user
+    choose what to remove: archives, unarchived game files, mods, and/or the entire
+    game folder. Dispatches DeleteGameAction with the selected options on submit.
+    Shows a loading indicator while the deletion is in progress.
+*@
 @inherits FluxorComponent;
 @inject IDispatcher _dispatcher;
 @inject IState<GameLibraryState> _gameLibraryState;
