@@ -5,7 +5,7 @@ namespace GameManager.Core.Tests.MediatR.F95.Queries;
 
 public class GetF95PageSummaryDataQueryTests
 {
-    [Fact]
+    [Fact(Skip = "requires network access to f95zone.to")]
     public async Task GetsSummaryData()
     {
         var hut = new GetF95PageSummaryDataQueryHandler(new F95Client());

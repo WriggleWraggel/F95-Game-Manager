@@ -6,7 +6,7 @@ namespace GameManager.Core.Tests.MediatR.F95.Commands;
 
 public class GetBypassCookiesCommandHandlerTests
 {
-    [Fact]
+    [Fact(Skip = "requires network access to f95zone.to")]
     public async Task BypassSuccessful()
     {
         var wrapper = new HttpSessionWrapper();

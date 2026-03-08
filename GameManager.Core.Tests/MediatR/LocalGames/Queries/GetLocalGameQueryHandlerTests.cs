@@ -8,31 +8,33 @@ using Newtonsoft.Json;
 
 namespace GameManager.Core.Tests.MediatR.LocalGames.Queries;
 
-public class GetLocalGameQueryHandlerTests
+public class GetLocalGameQueryHandlerTests : IDisposable
 {
 
     private NewtonSoftJsonSerializerWrapper _wrapper;
     private IFileRepo _fileRepo;
     private ILocalGameRepo _gameRepo;
+    private readonly string _appPath;
+    private readonly string _gameFolderPath;
 
     public GetLocalGameQueryHandlerTests()
     {
         _wrapper = new();
         _fileRepo = new FileRepo();
         _gameRepo = new LocalGameJsonFileRepo(_wrapper);
+        _appPath = Path.GetDirectoryName(Assembly.GetEntryAssembly()!.Location)!;
+        _gameFolderPath = Path.Combine(_appPath, "testGameName_GetQuery");
     }
 
     [Fact]
     public async Task GetsGameDataFromJsonFile()
     {
-        var appPath = Path.GetDirectoryName(Assembly.GetEntryAssembly()!.Location);
-        var filePath = Path.Combine(appPath!, "testGameName", "gameData.json");
         var wrapper = new NewtonSoftJsonSerializerWrapper();
 
         var game = new LocalGame
         {
-            FolderName = "testGameName",
-            RootFolder = new GameLibraryFolder { Path = appPath! },
+            FolderName = "testGameName_GetQuery",
+            RootFolder = new GameLibraryFolder { Path = _appPath },
             Description = "testDes",
             CustomSearchTerm = "testSearchTerm",
 
@@ -46,19 +48,23 @@ public class GetLocalGameQueryHandlerTests
                 Version = "TestVersion",
                 Tags = new List<Data.F95.F95Tag> { Data.F95.F95Tag.SciFi, Data.F95.F95Tag.Adventure }
             },
-            LaunchExePath = Path.Combine(appPath!, "testGameName", "testGameName.exe")
+            LaunchExePath = Path.Combine(_appPath, "testGameName_GetQuery", "testGameName.exe")
         };
 
         var fileCreateHandler = new SaveLocalGameCommandHandler(_gameRepo, _fileRepo);
         await fileCreateHandler.Handle(new SaveLocalGameCommand(game), CancellationToken.None);
 
         var hut = new GetLocalGameQueryHandler(wrapper);
-        var res = await hut.Handle(new GetLocalGameQuery { GameFolderPath = Path.Join(appPath!, "testGameName") }, CancellationToken.None);
-
-        File.Delete(filePath);
+        var res = await hut.Handle(new GetLocalGameQuery { GameFolderPath = _gameFolderPath }, CancellationToken.None);
 
         var expectedJson = JsonConvert.SerializeObject(game, Formatting.Indented);
         var actualJson = JsonConvert.SerializeObject(res, Formatting.Indented);
         actualJson.Should().Be(expectedJson);
+    }
+
+    public void Dispose()
+    {
+        if (Directory.Exists(_gameFolderPath))
+            Directory.Delete(_gameFolderPath, true);
     }
 }
