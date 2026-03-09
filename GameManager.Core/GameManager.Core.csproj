@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
+    <TargetFramework>net9.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
   </PropertyGroup>
@@ -15,19 +15,19 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Flurl" Version="4.0.0" />
-    <PackageReference Include="Flurl.Http" Version="4.0.2" />
-    <PackageReference Include="Flurl.Http.Newtonsoft" Version="0.9.1" />
-    <PackageReference Include="HtmlAgilityPack" Version="1.11.65" />
-    <PackageReference Include="MediatR" Version="12.4.1" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="8.0.8" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.8">
+    <PackageReference Include="Flurl" />
+    <PackageReference Include="Flurl.Http" />
+    <PackageReference Include="Flurl.Http.Newtonsoft" />
+    <PackageReference Include="HtmlAgilityPack" />
+    <PackageReference Include="MediatR" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
-    <PackageReference Include="Quickenshtein" Version="1.5.1" />
-    <PackageReference Include="Squid-Box.SevenZipSharp" Version="1.6.2.24" />
+    <PackageReference Include="Newtonsoft.Json" />
+    <PackageReference Include="Quickenshtein" />
+    <PackageReference Include="Squid-Box.SevenZipSharp" />
   </ItemGroup>
 
   <ItemGroup>

@@ -19,16 +19,16 @@
                         Data="@GameProperties"
                         TextField="@(_ => _)"
                         ValueField="@(_ => _)"
-                        SelectedValue="@SelectedPropertyName"
-                        SelectedValueChanged="@SelectedPropertyNameOnChange" />
+                        Value="@SelectedPropertyName"
+                        ValueChanged="@SelectedPropertyNameOnChange" />
         </div>
         <div class="sort-prop">
             <SelectList TValue="GameLibaryFilterSortOrder" TItem="GameLibaryFilterSortOrder"
                         Data="@SortOrders"
                         TextField="@(_ => _.ToString())"
                         ValueField="@(_ => _)"
-                        SelectedValue="@SelectedSortOrder"
-                        SelectedValueChanged="@SelectedSortOrderOnChange" />
+                        Value="@SelectedSortOrder"
+                        ValueChanged="@SelectedSortOrderOnChange" />
         </div>
     </div>
     <div>

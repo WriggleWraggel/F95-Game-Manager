@@ -19,11 +19,11 @@
         <CardBody>
             <Field>
                 <FieldLabel>Username</FieldLabel>
-                <TextEdit @bind-Text="f95AuthSettings.Username" />
+                <TextInput @bind-Value="f95AuthSettings.Username" />
             </Field>
             <Field>
                 <FieldLabel>Password</FieldLabel>
-                <TextEdit @bind-Text="f95AuthSettings.Password" />
+                <TextInput @bind-Value="f95AuthSettings.Password" />
             </Field>
             <Button Color="Color.Primary" @onclick="@(args => Authenticate())">Authenticate</Button>
             <Button Color="Color.Success" Type="Blazorise.ButtonType.Submit">Save</Button>

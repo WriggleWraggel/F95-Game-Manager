@@ -25,7 +25,7 @@
                 <Field Horizontal=true>
                     <FieldLabel>Download Folder</FieldLabel>
                     <FieldBody>
-                        <TextEdit @bind-Text=folder.Path />
+                        <TextInput @bind-Value=folder.Path />
                         <Button Color=Color.Primary @onclick=@(args => ScanForDownloadedGames(folder)) Loading=busy Disabled=busy>Scan</Button>
                     </FieldBody>
                 </Field>

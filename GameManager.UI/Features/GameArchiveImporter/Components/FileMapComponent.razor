@@ -37,7 +37,7 @@
             </Field>
             <Field>
                 <FieldLabel>Detected File</FieldLabel>
-                <MemoEdit Disabled=true Text=@Path.GetFileName(map.FilePath)/>
+                <MemoInput Disabled=true Value=@Path.GetFileName(map.FilePath)/>
             </Field>
             <Fields>
                 <Field>
@@ -57,7 +57,7 @@
                 <Field>
                     <FieldLabel>Version</FieldLabel>
                     <FieldBody>
-                        <TextEdit @bind-Text=map.Version Placeholder="Version"/>
+                        <TextInput @bind-Value=map.Version Placeholder="Version"/>
                     </FieldBody>
                 </Field>
             </Fields>
