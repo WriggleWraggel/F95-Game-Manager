@@ -1,4 +1,12 @@
-﻿@inherits FluxorComponent;
+﻿@*
+    ExistingGameComponent
+    Game card for a single tracked game. Wraps GameSummaryControl and injects a
+    hover overlay with a play button, plus action buttons for: open F95 link / search
+    F95, unzip archive, delete, open folder, and edit. Button colours and tooltips adapt
+    to reflect update availability, archive unzip state, and 7-Zip configuration.
+    Each button dispatches the corresponding Fluxor action via IDispatcher.
+*@
+@inherits FluxorComponent;
 @inject IDispatcher _dispatcher;
 @inject IState<SettingsState> _settingsState;
 @inject NavigationManager _navigation;

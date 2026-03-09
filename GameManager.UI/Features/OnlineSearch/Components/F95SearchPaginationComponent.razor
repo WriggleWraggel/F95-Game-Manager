@@ -1,4 +1,11 @@
-﻿@inherits FluxorComponent;
+﻿@*
+    F95SearchPaginationComponent
+    Pagination bar for F95zone search results. Renders Previous («) and Next (»)
+    navigation items alongside numbered page links. The Previous button is disabled
+    on page 1 and the Next button is disabled on the last page. Clicking any page
+    number or navigation item dispatches SearchF95GamesAction for that page.
+*@
+@inherits FluxorComponent;
 @inject IState<OnlineSearchState> _f95SearchState;
 @inject IDispatcher _dispatcher;
 

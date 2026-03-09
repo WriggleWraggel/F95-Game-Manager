@@ -1,4 +1,11 @@
-﻿@using GameManager.UI.Features.GameUpdater
+﻿@*
+    MainLayout
+    Root application layout. Wraps all pages with a Fluxor StoreInitializer, a
+    Blazorise ThemeProvider, an ErrorBoundary, the NavMenu sidebar, the TopRow header,
+    and the ModalWrapper overlay. Waits for settings to be initialised before rendering
+    page content so that child components always have valid application settings.
+*@
+@using GameManager.UI.Features.GameUpdater
 @using GameManager.UI.Features.Settings.Actions.Init
 @inherits FluxorLayout
 @inject IState<SettingsState> _settingsState

@@ -1,4 +1,11 @@
-﻿@inherits FluxorComponent;
+﻿@*
+    TopSeachBarComponent
+    Compact search bar in the main navigation header. As the user types, it dispatches
+    FilterLibraryByTitleAction to filter the library in real time. On form submit it
+    dispatches SearchF95GamesAction and navigates to the Search page so the user can
+    see F95zone results.
+*@
+@inherits FluxorComponent;
 @inject IState<OnlineSearchState> _f95SearchState;
 @inject IDispatcher _dispatcher;
 @inject NavigationManager _navigationManger

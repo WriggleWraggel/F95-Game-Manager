@@ -1,4 +1,12 @@
-﻿@using GameManager.UI.Features.Settings.Actions.DownloadFolders
+﻿@*
+    DownloadFoldersComponent
+    Settings card for managing import/download folder paths. Each path is displayed
+    in a text field with a Scan button that saves settings and dispatches
+    ScanDownloadFolderAction to detect compressed archives in that folder. An Add
+    button appends a new empty entry and a Save button persists changes via
+    SaveSettingsAction.
+*@
+@using GameManager.UI.Features.Settings.Actions.DownloadFolders
 @using GameManager.UI.Features.Settings.Actions.Save
 @inherits FluxorComponent;
 @inject IState<SettingsState> _settingsState;

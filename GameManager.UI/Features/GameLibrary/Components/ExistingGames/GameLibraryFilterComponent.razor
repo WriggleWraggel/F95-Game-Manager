@@ -1,4 +1,11 @@
-﻿@using System.Reflection
+﻿@*
+    GameLibraryFilterComponent
+    Filter and sort toolbar for the game library. Provides a property selector and
+    sort-order selector (Ascending / Descending) to order the game list, plus a
+    multi-select play-status filter. Dispatches SortLibraryByPropertyAction and
+    FilterByPlayStatusesAction to update GameLibraryState.
+*@
+@using System.Reflection
 @using System.ComponentModel
 @inherits FluxorComponent;
 @inject IState<GameLibraryState> _gameLibraryState;

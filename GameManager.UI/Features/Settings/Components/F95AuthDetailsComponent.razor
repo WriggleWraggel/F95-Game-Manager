@@ -1,4 +1,11 @@
-﻿@using GameManager.UI.Features.F95Login.Actions
+﻿@*
+    F95AuthDetailsComponent
+    Settings card for F95zone authentication. Displays username and password text
+    fields bound to the current settings, an Authenticate button (dispatches
+    F95AuthAction to perform a live login), and a Save button (dispatches
+    SaveSettingsAction to persist credentials).
+*@
+@using GameManager.UI.Features.F95Login.Actions
 
 @inherits FluxorComponent;
 @inject IState<SettingsState> _settingsState;

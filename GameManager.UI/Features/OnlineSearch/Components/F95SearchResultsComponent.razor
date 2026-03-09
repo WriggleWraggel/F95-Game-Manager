@@ -1,4 +1,13 @@
-﻿@using GameManager.UI.Features.GameLibrary.Components.ExistingGames
+﻿@*
+    F95SearchResultsComponent
+    Displays the results of an F95zone search as a grid of game cards. While searching
+    it shows "Searching". When results are empty it shows "No Results found". For each
+    returned F95Game it shows either an ExistingGameComponent (if already in the local
+    library) or a GameSummaryControl with Add Game / Bind to Game buttons. A root-folder
+    selector lets the user choose where to save a new game. Pagination is provided by
+    F95SearchPaginationComponent at the top and bottom of the list.
+*@
+@using GameManager.UI.Features.GameLibrary.Components.ExistingGames
 @using GameManager.UI.Features.OnlineSearch.Actions
 @using GameManager.UI.Features.OnlineSearch.Actions.SaveSearchResult
 @inherits FluxorComponent;

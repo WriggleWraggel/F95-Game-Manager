@@ -1,4 +1,12 @@
-﻿@using GameManager.UI.Features.Settings.Actions.Save
+﻿@*
+    LibraryFoldersComponent
+    Settings card for managing game library root folders. Each folder path is
+    displayed in a text field. When ScanEnabled=true a Scan button lets the user
+    trigger a new-game scan for that folder (dispatches SaveSettingsAction then
+    GetNewGamesAction). An Add button appends a new empty folder entry and a Save
+    button persists all folder paths via SaveSettingsAction.
+*@
+@using GameManager.UI.Features.Settings.Actions.Save
 @inherits FluxorComponent;
 @inject IState<SettingsState> _settingsState;
 @inject IDispatcher _dispatcher;

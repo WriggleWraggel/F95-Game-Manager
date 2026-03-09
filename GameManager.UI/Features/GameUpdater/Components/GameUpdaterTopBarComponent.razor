@@ -1,4 +1,12 @@
-﻿@using GameManager.UI.Features.F95Login
+﻿@*
+    GameUpdaterTopBarComponent
+    Status button displayed in the top navigation bar relating to game updates.
+    Shows a "Not connected to F95" error button when not logged in. While checking
+    for updates it shows a loading spinner with progress. When updates are available
+    it shows the count and navigates to the updates page. Otherwise it shows a
+    "Check For Updates" button. An auto-update timer fires every 5 minutes.
+*@
+@using GameManager.UI.Features.F95Login
 @using GameManager.UI.Features.GameUpdater.Actions
 @using GameManager.UI.Features.GameUpdater.Actions.GetUpdates
 @inherits FluxorComponent

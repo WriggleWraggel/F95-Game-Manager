@@ -1,3 +1,11 @@
+@*
+    PurgeGameFolderComponent
+    Modal body displayed when an existing game folder has content before unzipping a
+    new archive. Shows the detected folder paths and a checkbox letting the user
+    choose whether to delete them. Clicking Continue dispatches either
+    PurgeGameFolderThenUnzipAction (if purge selected) or UnZipGameAction, then
+    closes the modal.
+*@
 @using GameManager.UI.Features.GameArchiveImporter.Actions.PurgeGameFolder
 @inherits FluxorComponent
 @inject IDispatcher _dispatcher

@@ -1,4 +1,11 @@
-﻿@using GameManager.UI.Features.F95Login
+﻿@*
+    GameUpdaterComponent
+    Displays a grid of all locally tracked games that have UpdateAvailable=true.
+    Each game card (GameSummaryControl) shows the F95 update date and the archive
+    file last-updated date, with buttons to open the F95 page, open the game folder,
+    edit the game, or ignore the update (sets UpdateAvailable=false and saves).
+*@
+@using GameManager.UI.Features.F95Login
 @using GameManager.UI.Features.GameUpdater.Actions
 @using GameManager.UI.Features.GameUpdater.Actions.GetUpdates
 @using GameManager.UI.Features.GameUpdater.Controls

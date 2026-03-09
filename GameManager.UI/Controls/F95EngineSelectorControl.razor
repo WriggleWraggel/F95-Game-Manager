@@ -1,4 +1,10 @@
-﻿<Autocomplete Placeholder="Engines"
+﻿@*
+    F95EngineSelectorControl
+    Multi-select autocomplete for choosing one or more F95zone game engine prefixes
+    (e.g. Ren'Py, Unity, RPGM). Exposes two-way bindings for the selected engine
+    enum values and their display text strings so parent components can react to changes.
+*@
+<Autocomplete Placeholder="Engines"
               Multiple="true" FreeTyping="false"
               Data="F95GameEnginePrefixes"
               TItem="F95PrefixItem" TValue="F95GamePrefix"

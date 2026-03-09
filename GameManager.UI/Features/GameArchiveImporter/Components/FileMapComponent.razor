@@ -1,4 +1,13 @@
-﻿@using GameManager.UI.Features.GameArchiveImporter.Actions
+﻿@*
+    FileMapComponent
+    Card for a single detected archive file. When the map entry is still processing
+    it shows a "Processing" indicator. Otherwise it shows a FileMapViewGameComponent
+    (current game info), the detected filename, a game-selector autocomplete, a version
+    field, and an optional checkbox to remove the old archive. An import button moves
+    the archive to the selected game folder and a search button triggers an online search
+    for a matching game.
+*@
+@using GameManager.UI.Features.GameArchiveImporter.Actions
 @using GameManager.UI.Features.GameArchiveImporter.Actions.Move
 @using System.Text.RegularExpressions
 @using GameManager.UI.Features.GameArchiveImporter.Actions.SeachForMatchingGame

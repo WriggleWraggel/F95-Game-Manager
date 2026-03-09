@@ -1,4 +1,11 @@
-﻿@inherits FluxorComponent;
+﻿@*
+    NewGameComponent
+    Shows game folders that were discovered during a library scan but have not yet been
+    saved. During scanning it shows a "Searching" heading. When no folders are configured
+    it prompts the user to add library folders. When unsaved games are found it renders
+    an UnmanagedGameControl for each, and clicking Add opens the edit modal to save the game.
+*@
+@inherits FluxorComponent;
 @inject IState<GameLibraryState> _gameLibraryState;
 @inject IState<SettingsState> _settingsState;
 @inject IDispatcher _dispatcher;

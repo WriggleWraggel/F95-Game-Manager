@@ -1,4 +1,11 @@
-﻿<Card>
+﻿@*
+    UnmanagedGameControl
+    Card displayed for a locally-detected game folder that has not yet been saved to the
+    library. Shows the game title and full folder path with an Add button. Clicking Add
+    invokes the AddGame callback so the parent component can open the edit modal and save
+    the game.
+*@
+<Card>
     <CardHeader>
         @Game.Title
     </CardHeader>

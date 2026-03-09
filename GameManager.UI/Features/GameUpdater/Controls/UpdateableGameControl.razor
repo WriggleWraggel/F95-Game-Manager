@@ -1,4 +1,11 @@
-﻿<Card Class="game-card">
+﻿@*
+    UpdateableGameControl
+    Card for a game that has a pending update. Displays the local version badge,
+    the latest F95zone version badge, the F95 thread update date, and the date
+    the archive was last unzipped. A Buttons render fragment lets the parent inject
+    action buttons (e.g. open link, open folder, edit, ignore update).
+*@
+<Card Class="game-card">
     <CardHeader>
         <div class="cover-wrapper">
             <div class="cover" style="@backgroundImageStyle" />
