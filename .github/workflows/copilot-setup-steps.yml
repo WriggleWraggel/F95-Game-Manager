@@ -22,7 +22,15 @@ jobs:
 
       - name: Restore dependencies
         run: |
-          dotnet restore GameManager.Core/GameManager.Core.csproj
-          dotnet restore GameManager.UI/GameManager.UI.csproj
-          dotnet restore GameManager.UI.Tests/GameManager.UI.Tests.csproj
           dotnet restore GameManager.Core.Tests/GameManager.Core.Tests.csproj
+          dotnet restore GameManager.UI.Tests/GameManager.UI.Tests.csproj
+
+      - name: Build
+        run: |
+          dotnet build GameManager.Core.Tests/GameManager.Core.Tests.csproj --no-restore --configuration Release
+          dotnet build GameManager.UI.Tests/GameManager.UI.Tests.csproj --no-restore --configuration Release
+
+      - name: Test
+        run: |
+          dotnet test GameManager.Core.Tests/GameManager.Core.Tests.csproj --no-build --configuration Release
+          dotnet test GameManager.UI.Tests/GameManager.UI.Tests.csproj --no-build --configuration Release
