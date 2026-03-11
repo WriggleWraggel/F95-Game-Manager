@@ -5,7 +5,7 @@ on:
 
 jobs:
   copilot-setup-steps:
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
     permissions:
       contents: read
 
@@ -20,17 +20,11 @@ jobs:
           cache: true
           cache-dependency-path: '**/Directory.Packages.props'
 
+      - name: Install MAUI workload
+        run: dotnet workload install maui
+
       - name: Restore dependencies
-        run: |
-          dotnet restore GameManager.Core.Tests/GameManager.Core.Tests.csproj
-          dotnet restore GameManager.UI.Tests/GameManager.UI.Tests.csproj
+        run: dotnet restore F95GameManager.sln
 
       - name: Build
-        run: |
-          dotnet build GameManager.Core.Tests/GameManager.Core.Tests.csproj --no-restore --configuration Release
-          dotnet build GameManager.UI.Tests/GameManager.UI.Tests.csproj --no-restore --configuration Release
-
-      - name: Test
-        run: |
-          dotnet test GameManager.Core.Tests/GameManager.Core.Tests.csproj --no-build --configuration Release
-          dotnet test GameManager.UI.Tests/GameManager.UI.Tests.csproj --no-build --configuration Release
+        run: dotnet build F95GameManager.sln --no-restore --configuration Release
