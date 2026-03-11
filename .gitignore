@@ -163,6 +163,8 @@ AutoTest.Net/
 # Web workbench (sass)
 .sass-cache/
 
+# SassCompiler source maps
+*.css.map
 # Installshield output folder
 [Ee]xpress/
 

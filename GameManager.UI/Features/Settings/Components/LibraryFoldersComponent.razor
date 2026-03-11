@@ -22,7 +22,7 @@
             {
                 <Field>
                     <FieldLabel>Root Folder</FieldLabel>
-                    <TextEdit @bind-Text=folder.Path />
+                    <TextInput @bind-Value=folder.Path />
                     @if (ScanEnabled)
                     {
                         <Button Color=Color.Primary @onclick=@(args => GetNewGames(folder)) Disabled=busy>Scan</Button>

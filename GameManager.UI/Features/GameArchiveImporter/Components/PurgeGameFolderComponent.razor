@@ -14,7 +14,7 @@
     <CardBody>
         <Field>
             <FieldLabel>@DetectedFoldersText</FieldLabel>
-            <MemoEdit Disabled="true" Text="@string.Join(Environment.NewLine, GameFolders)" />
+            <MemoInput Disabled="true" Value="@string.Join(Environment.NewLine, GameFolders)" />
         </Field>
         <Field>
             <Check TValue="bool" @bind-Checked="PurgeFiles">@PurgeFilesText</Check>

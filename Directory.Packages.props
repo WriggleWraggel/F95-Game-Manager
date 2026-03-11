@@ -1,0 +1,51 @@
+<Project>
+  <PropertyGroup>
+    <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
+  </PropertyGroup>
+
+  <ItemGroup Label="MAUI">
+    <PackageVersion Include="Microsoft.Maui.Controls" Version="9.0.120" />
+    <PackageVersion Include="Microsoft.Maui.Controls.Compatibility" Version="9.0.120" />
+    <PackageVersion Include="Microsoft.AspNetCore.Components.WebView.Maui" Version="9.0.120" />
+    <PackageVersion Include="Microsoft.Extensions.Logging.Debug" Version="9.0.13" />
+  </ItemGroup>
+
+  <ItemGroup Label="HTTP">
+    <PackageVersion Include="Flurl" Version="4.0.0" />
+    <PackageVersion Include="Flurl.Http" Version="4.0.2" />
+    <PackageVersion Include="Flurl.Http.Newtonsoft" Version="0.9.1" />
+    <PackageVersion Include="HtmlAgilityPack" Version="1.12.4" />
+  </ItemGroup>
+
+  <ItemGroup Label="Core">
+    <PackageVersion Include="MediatR" Version="12.5.0" />
+    <PackageVersion Include="Microsoft.EntityFrameworkCore.Sqlite" Version="9.0.13" />
+    <PackageVersion Include="Microsoft.EntityFrameworkCore.Tools" Version="9.0.13" />
+    <PackageVersion Include="Newtonsoft.Json" Version="13.0.4" />
+    <PackageVersion Include="Quickenshtein" Version="1.5.1" />
+    <PackageVersion Include="Squid-Box.SevenZipSharp" Version="1.6.2.24" />
+  </ItemGroup>
+
+  <ItemGroup Label="UI">
+    <PackageVersion Include="AspNetCore.SassCompiler" Version="1.97.1" />
+    <PackageVersion Include="Blazorise" Version="2.0.2" />
+    <PackageVersion Include="Blazorise.Bootstrap5" Version="2.0.2" />
+    <PackageVersion Include="Blazorise.Components" Version="2.0.2" />
+    <PackageVersion Include="Blazorise.Icons.FontAwesome" Version="2.0.2" />
+    <PackageVersion Include="Blazorise.Sidebar" Version="2.0.2" />
+    <PackageVersion Include="Fluxor" Version="6.9.0" />
+    <PackageVersion Include="Fluxor.Blazor.Web" Version="6.9.0" />
+    <PackageVersion Include="Fluxor.Blazor.Web.ReduxDevTools" Version="6.9.0" />
+    <PackageVersion Include="Microsoft.AspNetCore.Components.Web" Version="9.0.13" />
+  </ItemGroup>
+
+  <ItemGroup Label="Testing">
+    <PackageVersion Include="bunit" Version="1.40.0" />
+    <PackageVersion Include="FluentAssertions" Version="8.8.0" />
+    <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="18.3.0" />
+    <PackageVersion Include="NSubstitute" Version="5.3.0" />
+    <PackageVersion Include="xunit" Version="2.9.3" />
+    <PackageVersion Include="xunit.runner.visualstudio" Version="3.1.5" />
+    <PackageVersion Include="coverlet.collector" Version="8.0.0" />
+  </ItemGroup>
+</Project>
